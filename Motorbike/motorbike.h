@@ -1,29 +1,30 @@
 #ifndef MOTORBIKE_H
 #define MOTORBIKE_H
-
 #include <string>
-using namespace std;
 
 class Motorbike {
     private:
-
-    public:
     // motorbike information
-        string model;
-        string color;
+        std::string model;
+        std::string color;
         int engine_size;
-        string transmission_mode;
+        std::string transmission_mode;
         int year_made;
-        string desctiption;
+        std::string desctiption;
 
     // renting information
         int rent_cost;
-        string start_date;
-        string end_date;
+        std::string start_date;
+        std::string end_date;
+    public:
+    
     // constructor
-        Motorbike(string model_ip, string color_ip, int engine_size_ip, 
-        string transmission_mode_ip, int year_made_ip, string desctiption_ip, 
-        int rent_cost_ip, string start_date_ip, string end_date_ip);
+        Motorbike(std::string model_ip, std::string color_ip, int engine_size_ip, 
+        std::string transmission_mode_ip, int year_made_ip, std::string desctiption_ip, 
+        int rent_cost_ip, std::string start_date_ip, std::string end_date_ip);
+
+        int bike_status();  //check for is bike is list/unlist/avalable/unaviaable
+        
 };
 
 

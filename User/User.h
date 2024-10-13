@@ -1,17 +1,17 @@
 #ifndef USER_H
 #define USER_H
 #include <string>
-using namespace std;
 class User{
     private:
-        string username;
-        string password;
+        std::string username;
+        std::string password;
     public:
-        User(string username_ip, string password_ip);
-        string getUsername();
-        string getPassword();
-        string setUsername(string username_ip);
-        string setPassword(string password_ip);
+        User(){}; //default constructor
+        User(std::string username_ip, std::string password_ip);
+        std::string getUsername();
+        std::string getPassword();
+        void setUsername(std::string username_ip);
+        void setPassword(std::string password_ip);
 };
 
 #endif

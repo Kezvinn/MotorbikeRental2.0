@@ -10,8 +10,6 @@ class Rating{
         string comment;
     public:
         Rating(float rating_i, string comment_i);
-
-
 };
 
 
