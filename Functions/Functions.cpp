@@ -1,4 +1,4 @@
-#include "my_func.h"
+#include "Functions.h"
 
 std::string randomIDs (std::string type){ 
     srand(time(0));
@@ -8,6 +8,15 @@ std::string randomIDs (std::string type){
     }
     else if (type == "motorbike"){
         id = "B" + std::to_string(rand() % 1000);
+    }
+    else if (type == "request"){
+        id = "R-R" + std::to_string(rand() % 1000);
+    }
+    else if (type == "memreview"){
+        id = "M-R" + std::to_string(rand() % 1000);
+    }
+    else if (type == "bikereview"){
+        id = "B-R" + std::to_string(rand() % 1000);
     }
     return id;
 }
@@ -74,10 +83,34 @@ bool isUsername(std::string username){
     }
     return false;
 }
+
 bool isPassword(std::string password){
     std::regex validRegex("^[A-Za-z0-9!@#$%^&*()_+\\-=\\[\\]{};:,<.>?]+$");
     if (std::regex_match(password, validRegex)){
         return true;
     }
     return false;
+}
+
+std::vector<std::string> splitString(std::string &str, char delimiter){
+    std::vector <std::string> data_result;
+    std::istringstream is(str);
+    std::string item;
+    while (std::getline(is, item, delimiter)){
+        data_result.push_back(item);
+    }
+    return data_result;
+}
+
+int choiceInRange(int min, int max){
+    int choice;
+    do {
+        std::cout << "Enter your choice: ";
+        std::cin >> choice;
+        if (std::cin.fail()){
+            std::cin.clear();
+            std::cin.ignore();
+        }
+    } while (choice < min || choice > max);
+    return choice;
 }

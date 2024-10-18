@@ -1,4 +1,4 @@
-#include "user.h"
+#include "User.h"
 
 User::User(std::string username_ip, std::string password_ip):username(username_ip), password(password_ip){};
 

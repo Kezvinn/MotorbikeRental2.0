@@ -1,5 +1,6 @@
-#ifndef MY_FUNC_H
-#define MY_FUNC_H
+#ifndef FUNCTIONS_H
+#define FUNCTIONS_H
+#include <iostream>
 #include <string>
 #include <random>
 #include <time.h>
@@ -18,4 +19,8 @@ bool isLetter(std::string input);
 bool isUsername(std::string input);
 bool isPassword(std::string input);
 
+int choiceInRange(int min, int max);
+
+// string manipulation functions
+std::vector<std::string> splitString (std::string &str, char delimiter);
 #endif

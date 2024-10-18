@@ -1,11 +1,22 @@
 #include "Member.h"
 Member::Member(){}
-Member::Member(std::string username_ip, std::string password_ip, std::string fullname_ip, 
+Member::Member(std::string memberID_ip, std::string username_ip, std::string password_ip, std::string fullname_ip, 
     std::string phonenumber_ip, bool id_type_ip, std::string id_number_ip, 
-    std::string drv_license_ip, std::string exp_date_ip, int credit_ip)
-    :User(username_ip, password_ip), fullname(fullname_ip), 
+    std::string drv_license_ip, std::string exp_date_ip, int credit_ip, 
+    std::string ownedbikeID_ip, std::string rentedbikeID_ip,
+    float memberRating_ip)
+    :User(username_ip, password_ip), memberID(memberID_ip), fullname(fullname_ip), 
     phonenumber(phonenumber_ip), id_type(id_type_ip), id_number(id_number_ip),
-    drv_license(drv_license_ip), exp_date(exp_date_ip), credit(credit_ip){};
+    drv_license(drv_license_ip), exp_date(exp_date_ip), credit(credit_ip), 
+    ownedbikeID(ownedbikeID_ip), rentedbikeID(rentedbikeID_ip),
+    memberRating(memberRating_ip)
+    {
+        if (!this->memberID.empty()){
+            memberID = randomIDs("member");
+        } else {
+            this->memberID = memberID_ip;
+        }
+    };
 Member::~Member(){
     delete this->ownedbike;
     delete this->rentedbike;
@@ -45,79 +56,101 @@ int Member::addCredit(){
 
 
 int Member::signup(){
-    std::string username, password, fullname, phonenumber;
-    int id_type;   // 0 = Citizen ID, 1 = Passport
-    std::string id_number, drv_license, exp_date;
-    int credit = 20;    // default credit
+    // std::string username, password, fullname, phonenumber;
+    // int id_type;   // 0 = Citizen ID, 1 = Passport
+    // std::string id_number, drv_license, exp_date;
+    // int credit = 20;    // default credit
 
-    std::cin.ignore();
-    std::cout << "--------------------------------------------" << std::endl; 
-    do {
-        std::cout << "Enter your username: ";
-        std::getline(std::cin, username, '\n');
-    } while (!isUsername(username));
+    // std::cin.ignore();
+    // std::cout << "--------------------------------------------" << std::endl; 
+    // do {
+    //     std::cout << "Enter your username: ";
+    //     std::getline(std::cin, username, '\n');
+    // } while (!isUsername(username));
 
-    std::cout << "--------------------------------------------" << std::endl; 
-    do {
-        std::cout << "Enter your password: ";
-        std::getline(std::cin, password, '\n');
-    } while (!isPassword(password));
+    // std::cout << "--------------------------------------------" << std::endl; 
+    // do {
+    //     std::cout << "Enter your password: ";
+    //     std::getline(std::cin, password, '\n');
+    // } while (!isPassword(password));
     
-    std::cout << "--------------------------------------------" << std::endl; 
-    do {
-        std::cout << "Enter your fullname: ";
-        std::getline(std::cin, fullname,'\n');
-    } while (!isLetter(fullname));
+    // std::cout << "--------------------------------------------" << std::endl; 
+    // do {
+    //     std::cout << "Enter your fullname: ";
+    //     std::getline(std::cin, fullname,'\n');
+    // } while (!isLetter(fullname));
 
-    std::cout << "--------------------------------------------" << std::endl; 
-    do {
-        std::cout << "Enter your phone number: ";
-        std::getline(std::cin, phonenumber,'\n');
-    } while (!isNumber(phonenumber));    
+    // std::cout << "--------------------------------------------" << std::endl; 
+    // do {
+    //     std::cout << "Enter your phone number: ";
+    //     std::getline(std::cin, phonenumber,'\n');
+    // } while (!isNumber(phonenumber));    
 
-    std::cout << "--------------------------------------------" << std::endl; 
-    do {
-        std::cout << "ID type (0 = Citizen ID, 1 = Passport): ";
-        std::cin >> id_type;
-        if (std::cin.fail()){
-            std::cin.clear();
-            std::cin.ignore();
-        }
-    } while (id_type != 0 && id_type != 1);
+    // std::cout << "--------------------------------------------" << std::endl; 
+    // do {
+    //     std::cout << "ID type (0 = Citizen ID, 1 = Passport): ";
+    //     std::cin >> id_type;
+    //     if (std::cin.fail()){
+    //         std::cin.clear();
+    //         std::cin.ignore();
+    //     }
+    // } while (id_type != 0 && id_type != 1);
     
-    std::cin.ignore();
-    std::cout << "--------------------------------------------" << std::endl; 
-    do {
-        std::cout << "Enter your ID number: ";
-        std::getline(std::cin, id_number,'\n');
-    } while (!isNumber(id_number));
+    // std::cin.ignore();
+    // std::cout << "--------------------------------------------" << std::endl; 
+    // do {
+    //     std::cout << "Enter your ID number: ";
+    //     std::getline(std::cin, id_number,'\n');
+    // } while (!isNumber(id_number));
 
-    std::cout << "--------------------------------------------" << std::endl; 
-    do {
-        std::cout << "Enter your driver license: ";
-        std::getline(std::cin, drv_license, '\n');
-    } while (!isNumber(drv_license));
+    // std::cout << "--------------------------------------------" << std::endl; 
+    // do {
+    //     std::cout << "Enter your driver license: ";
+    //     std::getline(std::cin, drv_license, '\n');
+    // } while (!isNumber(drv_license));
 
-    std::cout << "--------------------------------------------" << std::endl; 
-    do {
-        std::cout << "Enter your driver license expiration date (DD/MM/YYYY): ";
-        std::getline(std::cin, exp_date, '\n');
-    } while (!isDateValid(exp_date));
+    // std::cout << "--------------------------------------------" << std::endl; 
+    // do {
+    //     std::cout << "Enter your driver license expiration date (DD/MM/YYYY): ";
+    //     std::getline(std::cin, exp_date, '\n');
+    // } while (!isDateValid(exp_date));
 
-    std::cout << "--------------------------------------------" << std::endl; 
-    char ans;
-    do {
-        std::cout << "Add new bike (Y/N)? ";
-        std::cin >> ans; 
-    }  while (tolower(ans) != 'y' && tolower(ans) != 'n');
+    // std::cout << "--------------------------------------------" << std::endl; 
+    // char ans;
+    // do {
+    //     std::cout << "Add new bike (Y/N)? ";
+    //     std::cin >> ans; 
+    // }  while (tolower(ans) != 'y' && tolower(ans) != 'n');
     
-    if (ans == 'Y' || ans == 'y'){
-        // add new bike
-    } else if (ans == 'N' || ans == 'n'){
-        std::cout << "Sign up successfully!" << std::endl;
-    }
+    // if (ans == 'Y' || ans == 'y'){
+    //     // add new bike
+    // } else if (ans == 'N' || ans == 'n'){
+    //     std::cout << "Sign up successfully!" << std::endl;
+    // }
 
-    // create new member and add to to the list 
-    return 0;
+    // // create new member and add to to the list 
+    // Member *mem = new Member(username, password, fullname,
+    //                         phonenumber, id_type, id_number,
+    //                         drv_license, exp_date, credit);
+    // return 0;   
+}
+std::vector<std::string> Member::getMemberinfo(){
+    std::vector<std::string> member_info;
+    member_info.clear();
     
+    member_info.push_back(this->getUsername());
+    member_info.push_back(this->getPassword());
+    member_info.push_back(this->fullname);
+    member_info.push_back(this->phonenumber);
+    member_info.push_back(std::to_string(this->id_type));
+    member_info.push_back(this->id_number);
+    member_info.push_back(this->drv_license);
+    member_info.push_back(this->exp_date);
+    member_info.push_back(std::to_string(this->credit));
+
+    return member_info;
+}
+
+float Member::getMemberRating(){
+    return this->memberRating;
 }
