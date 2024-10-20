@@ -21,9 +21,17 @@ std::string randomIDs (std::string type){
     return id;
 }
 // Fucntion to check if the input is only number
-bool isNumber(std::string phone){
+bool isNumber(std::string input){
     std::regex number_regex("^[0-9]+$");
-    if (std::regex_match(phone, number_regex)){
+    if (std::regex_match(input, number_regex)){
+        return true;
+    }
+    return false;
+}
+// check for number and allow float number
+bool isFloatNumber(std::string input){  
+    std::regex validRegex("^[0-9]*\\.?[0-9]+$");
+    if (std::regex_match(input, validRegex)){
         return true;
     }
     return false;

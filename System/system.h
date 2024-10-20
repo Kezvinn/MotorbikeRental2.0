@@ -37,6 +37,7 @@ class System {
         std::vector<Request> request_list;
 
         // Pointer to current member and motorbike
+        Admin ad;
         Member *current_member = nullptr;   // for the current member login in
         Motorbike *current_motorbike = nullptr; 
     public:
@@ -50,6 +51,9 @@ class System {
         int loadMemberReview();
         int loadBikeReview();
         int loadRentRequest();
+
+        // Non-Member
+        int viewAllMotorbike();
 
         // Member Menu
         int memberLogin();

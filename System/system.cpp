@@ -163,64 +163,88 @@ int System::signup(){
     return 0;
 }
 int System::bikeSignup(Motorbike &newbike){
-    std::string bikeID, model, color, transmission_mode, description, location;
-    int engine_size, year_made, rent_cost;
-    std::string start_date, end_date;
-    float min_mem_rating;
-    bool is_listed, is_available;
 
-    std::cout << "Enter model: ";
-    std::getline(std::cin, model);
+    std::vector<std::string> bike_info;
+    // ID
+    bike_info[0] = randomIDs("motorbike");
+    
+    // Model
+    std::cout << "Enter Motorbike model: ";
+    std::getline(std::cin, bike_info[1]);
 
-    std::cout << "Enter color: ";
-    std::getline(std::cin, color);
-
-    std::cout << "Enter engine size: ";
-    std::cin >> engine_size;
-
+    // Color
+    do {
+        std::cout << "Enter color: ";
+        std::getline(std::cin, bike_info[2]);
+    } while (isLetter(bike_info[2]));
+    
+    // Engine size
+    do {
+        std::cout << "Enter engine size in cubic centermeter (cc): ";
+        std::cin >> bike_info[3];
+    } while (isNumber(bike_info[3]));
+    
+    // Transmission mode
+    int choice = 0;
     do {
         std::cout << "Enter transmission mode: ";
         std::cout << "1. Manual" << std::endl;
-        std::cout << "2. Automatic" << std::endl;
+        std::cout << "2. Automatic" << std::endl;    
     } while (choiceInRange(1,2));
-
-    std::cin >> transmission_mode;
+    if (choice == 1) { bike_info[4] = "Manual"; }
+    else if (choice == 2) { bike_info[4] = "Automatic"; }
     
-    std::cout << "Enter year made: ";
-    std::cin >> year_made;
-    
+    // Year made
+    do {
+        std::cout << "Enter year made: ";   
+        std::cin >> bike_info[5];
+    } while (isNumber(bike_info[5]));
     std::cin.ignore();
+    
+    // Description
     std::cout << "Enter description: ";
-    std::getline(std::cin, description);
+    std::getline(std::cin, bike_info[6]);
     
-    std::cout << "Enter location: ";
-    std::cin >> location;
+    // Location
+    do {    
+        std::cout << "Available location: " << std::endl;
+        std::cout << "1. Hanoi (HN)" << std::endl;
+        std::cout << "2. Ho Chi Minh (HCM)" << std::endl;
+    } while (choiceInRange(1, 2));
+    if (choice == 1) { bike_info[7] = "HN"; }
+    else if (choice == 2) { bike_info[7] = "HCM"; }
     
-    std::cout << "Enter rent cost: ";
-    std::cin >> rent_cost;
-    
-    std::cout << "Enter start date: ";
-    std::cin >> start_date;
-    
-    std::cout << "Enter end date: ";
-    std::cin >> end_date;
-    
-    std::cout << "Enter minimum member rating: ";
-    std::cin >> min_mem_rating;
-    
-    std::cout << "Is listed (1 = yes, 0 = no): ";
-    std::cin >> is_listed;
-    
-    std::cout << "Is available (1 = yes, 0 = no): ";
-    std::cin >> is_available;
+    // Rent cost
+    do {
+        std::cout << "Enter rent cost: ";
+        std::cin >> bike_info[8];
+    } while (isNumber(bike_info[8]));
 
+    bike_info[9] = "";  // start date
+    bike_info[10] = ""; // end date
+    
+    // Minimum member rating
+    do {
+        std::cout << "Enter minimum member rating: ";
+        std::cin >> bike_info[11];
+    } while (isFloatNumber(bike_info[11]));
 
+    // List or unlist
+    char ans;
+    do {
+        std::cout << "List motorbike for rent (Y/N)? " << std::endl;
+        std::cin >> ans;
+    } while (tolower(ans) != 'y' && tolower(ans) != 'n');
+    if (ans == 'Y' || ans == 'y'){ bike_info[12] = "1";
+    } else if (ans == 'N' || ans == 'n'){ bike_info[12] = "0";
+    }
 
+    // Availability
+    bike_info[13] = "1";    // available
 
-    // newbike(bikeID, model, color, engine_size, 
-    //         transmission_mode, year_made, description, location, 
-    //         rent_cost, start_date, end_date,
-    //         min_mem_rating, is_listed, is_available);
+    // set bike info
+    newbike.setNewMotorbikeInfo(bike_info);
+    return 0;
 }
 
 int System::saveMember(){
@@ -253,9 +277,9 @@ int System::saveMotorbike(){
 
 // Menu
 int System::mainMenu(){
-    std::cout << "================================================" << std::endl;
-    std::cout << "                Main Menu                       " << std::endl;
-    std::cout << "================================================" << std::endl;
+    std::cout << "+==============================================+" << std::endl;
+    std::cout << "|                  Main Menu                   |" << std::endl;
+    std::cout << "+==============================================+" << std::endl;
     std::cout << "1. Member Login" << std::endl;
     std::cout << "2. Admin Login" << std::endl;
     std::cout << "3. Sign up" << std::endl;
@@ -263,27 +287,23 @@ int System::mainMenu(){
     std::cout << "5. Exit" << std::endl;
 
     int choice;
-    do {
-        std::cout << "Enter your choice: ";
-        std::cin >> choice;
-        if (std::cin.fail()){
-            std::cin.clear();
-            std::cin.ignore();
-        }
-    } while (choice < 1 || choice > 4);
-    
+    choiceInRange(1, 5);
+
     switch (choice){
         case 1:
             memberLogin();
             break;
         case 2:
-            signup();
-            break;
-        case 3:
             adminLogin();
             break;
+        case 3:
+            signup();
+            break;
         case 4:
-            return 0;
+            viewAllMotorbike();
+            break;
+        case 5: 
+            return 1;
     }
 }
 
@@ -298,15 +318,8 @@ int System::memberMenu(){
     std::cout << "5. Logout" << std::endl;          // logout
 
     int choice;
-    do {
-        std::cout << "Enter your choice: ";
-        std::cin >> choice;
-        if (std::cin.fail()){
-            std::cin.clear();
-            std::cin.ignore();
-        }
-    } while (choice < 1 || choice > 5);
-    
+    choiceInRange(1, 5);
+
     switch (choice){
         case 1:
             viewMotorbike();    //Done
@@ -327,6 +340,45 @@ int System::memberMenu(){
     }
 
 }
+
+int System::adminLogin(){
+    std::string admin_username, admin_pwd;
+    
+    std::cout << "Admin username: ";
+    std::cin >> admin_username;
+    std::cout << "Admin password: ";
+    std::cin >> admin_pwd;
+
+    if (ad.adminLogin(admin_username, admin_pwd)){
+        adminMenu();
+    } else {
+        std::cout << "Login failed!" << std::endl;
+        mainMenu();
+    }
+}
+int System::adminMenu(){
+    std::cout << "+==============================================+" << std::endl;
+    std::cout << "|               Administrator Menu             |" << std::endl;
+    std::cout << "+==============================================+" << std::endl;
+    std::cout << "1. View All Member" << std::endl;
+    std::cout << "2. View All Motorbike" << std::endl;
+    std::cout << "3. Logout" << std::endl;
+
+    int choice;
+    choiceInRange(1, 3);
+    switch (choice){
+        case 1:
+            ad.viewMember();
+            break;
+        case 2:
+            ad.viewMotorbike();
+            break;
+        case 3:
+            logout();
+            break;
+    }
+}
+
 int System::viewMotorbike(){
     std::cout << "+==============================================+" << std::endl;
     std::cout << "|            Motorbike Information             |" << std::endl;

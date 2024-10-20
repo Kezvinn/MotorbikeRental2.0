@@ -43,3 +43,24 @@ std::vector<std::string> Motorbike::getMotorbikeinfo(){
 std::string Motorbike::getMotorbikeID(){
     return motorbikeID;
 }
+
+int Motorbike::setNewMotorbikeInfo(std::vector<std::string> data){
+    if (data.size() != 13){
+        return 1;
+    }
+    this->motorbikeID = data[0];
+    this->model = data[1];
+    this->color = data[2];
+    this->engine_size = std::stoi(data[3]);
+    this->transmission_mode = data[4];
+    this->year_made = std::stoi(data[5]);
+    this->desctiption = data[6];
+    this->location = data[7];
+    this->rent_cost = std::stoi(data[8]);
+    this->start_date = data[9];
+    this->end_date = data[10];
+    this->min_mem_rating = std::stof(data[11]);
+    this->is_listed = std::stoi(data[12]);
+    this->is_available = std::stoi(data[13]);
+    return 0;
+}

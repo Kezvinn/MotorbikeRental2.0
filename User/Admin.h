@@ -4,8 +4,8 @@
 class Admin: public User{
     private:
     public:
-        Admin(std::string username_ip="admin", std::string password_ip="nhatn123");
-
+        Admin();
+        bool adminLogin(std::string username, std::string pwd);
         void viewMember();
         void viewMotorbike();
 };

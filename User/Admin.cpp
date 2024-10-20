@@ -1,11 +1,20 @@
 #include "Admin.h"
 
-Admin::Admin(std::string username_ip, std::string password_ip)
-:User(username_ip, password_ip){};
+Admin::Admin(){
+    this->setUsername("admin");
+    this->setPassword("nhatn123");
+};
 
-void viewMember(){
+bool Admin::adminLogin(std::string usename, std::string pwd){
+    if ((usename == this->getUsername()) && (pwd == this->getPassword())){
+        return true;
+    }
+    return false;
+}
+
+// void Admin::viewMember(){
     
-}
-void viewMotorbike(){
+// }
+// void Admin::viewMotorbike(){
 
-}
+// }

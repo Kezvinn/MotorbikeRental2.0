@@ -11,7 +11,8 @@
 std::string randomIDs (std::string type);
 
 // funtions to check for each input from user
-bool isNumber(std::string phone);
+bool isNumber(std::string input);
+bool isFloatNumber(std::string input);
 bool isLeapYear(int year);
 bool isValidDate(int day, int month, int year);
 bool isDateValid(const std::string& input);
