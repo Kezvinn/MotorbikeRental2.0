@@ -24,7 +24,9 @@ class Motorbike {
         bool is_listed;             // 12
         bool is_available;          // 13   // use this to check if the bike is available to rent or not
                                             // check for period of rent if it clash with other renter 
-    
+    // Bike Review
+        std::vector<MotorbikeReview*> motorbikeReview;
+        
     public:
     
     // constructor
@@ -35,11 +37,12 @@ class Motorbike {
         float min_mem_rating_ip, bool is_listed_ip, bool is_available_ip);
     
         // getter
-        std::vector<std::string> getMotorbikeinfo();    // get all motorbike information
+        std::vector<std::string> getMotorbikeInfo();    // get all motorbike information
+        void showMotorbikeInfo();   // show all motorbike information
         int setNewMotorbikeInfo(std::vector<std::string> data);
         
         std::string getMotorbikeID();   // get motorbike ID
-
+        int getRentCost();  // get rent cost
         std::string getbikeLocation();  // get bike location
 
         bool listed(); // check if bike is listed

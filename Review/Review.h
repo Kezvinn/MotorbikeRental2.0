@@ -11,7 +11,9 @@ class Review {
     public:
         Review();
         Review(float rating_i, std::string comment_i);
+        
         int getReview();    //getter to get rating and comment
+        
         float getRating();
         std::string getComment();
 };

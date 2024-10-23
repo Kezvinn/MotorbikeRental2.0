@@ -1,5 +1,5 @@
 #include <iostream>
-#include "./Functions/my_func.h"
+#include "./Functions/Functions.h"
 #include "./System/system.h"
 #include "./User/Member.h"
 #include "./User/Admin.h"
@@ -7,43 +7,11 @@
 using namespace std;
 
 int main(){
-    // cout << "----------------------------" << endl;
-    // cout << "MOTORBIKE RENTAL APPLICATION" << endl;
-    // cout << "Created by: Nhat Nguyen" << endl;
-    // cout << "----------------------------" << endl;
-    // cout << "1. Log in" << endl;
-    // cout << "2. Sign up" << endl;
-    // cout << "3. View motorbikes" << endl;
-    // cout << "4. Exit" << endl;
-    // Admin admin;
-    // Member member;
-    
+    System *system = new System();
 
-    // while (1){
-    //     int choice;
-    //     cout << "Enter your choice: ";
-    //     cin >> choice;
-    
-    //     switch (choice) {
-    //         case 1:
-    //             cout << "case 1" <<endl;
-    //             break;
-    //         case 2:
-    //             cout << "case 2" <<endl;
-    //             // member.signup();
-    //             cout << "Completed case 2" << endl;
-            
-    //             break;
-    //         case 3:
-    //             cout << "case 3" <<endl;
-            
-    //             break;
-    //         case 4:
-    //             cout << "case 4" <<endl;
-
-    //             return 0;
-    //     }
-    // }
-
+    system->init();
+    while (1){
+        system->mainMenu();
+    }
     return 0;
 }

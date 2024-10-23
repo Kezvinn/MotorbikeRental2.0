@@ -122,3 +122,50 @@ int choiceInRange(int min, int max){
     } while (choice < min || choice > max);
     return choice;
 }
+
+char returnYesNo(){
+    char c; 
+    do {
+        std::cout << "Return (Y/N)? " << std::endl;
+        std::cin >> c;
+        if (std::cin.fail()){
+            std::cin.clear();
+            std::cin.ignore();
+        }
+    } while (tolower(c) != 'y' && tolower(c) != 'n');
+    return c;
+}
+// Functions to calculate the duration by the different of date
+tm parseDate(const std::string & dateStr){
+    struct tm date = {0};
+    std::istringstream dateStream(dateStr);
+    std::string day, month, year;
+
+    // Parse the date string
+    std::getline(dateStream, day, '/');
+    std::getline(dateStream, month, '/');
+    std::getline(dateStream, year);
+
+    // Set the tm structure
+    date.tm_mday = std::stoi(day);
+    date.tm_mon = std::stoi(month) - 1;  // Months are 0-based in tm
+    date.tm_year = std::stoi(year) - 1900;  // Years since 1900
+
+    return date;
+}
+int rentDuration(const std::string &startDateStr, const std::string &endDateStr){
+     // Parse the input date strings
+    tm startDate = parseDate(startDateStr);
+    tm endDate = parseDate(endDateStr);
+
+    // Convert tm structure to time_t
+    time_t start = mktime(&startDate);
+    time_t end = mktime(&endDate);
+
+    // Calculate the difference in seconds and convert to days
+    double secondsDifference = difftime(end, start);
+    int daysDifference = secondsDifference / (60 * 60 * 24);
+
+    return daysDifference;
+}
+

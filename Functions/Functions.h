@@ -22,6 +22,12 @@ bool isPassword(std::string input);
 
 int choiceInRange(int min, int max);
 
+char returnYesNo();
+
+tm parseDate(const std::string & dateStr);
+int rentDuration(const std::string &startDate, const std::string &endDate);
+
+
 // string manipulation functions
 std::vector<std::string> splitString (std::string &str, char delimiter);
 #endif

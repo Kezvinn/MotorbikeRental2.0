@@ -22,9 +22,13 @@ Motorbike::Motorbike(std::string motorbikeID_ip, std::string model_ip, std::stri
                         }
                     }
 
-std::vector<std::string> Motorbike::getMotorbikeinfo(){
+int Motorbike::getRentCost(){
+    return rent_cost;
+}
+std::vector<std::string> Motorbike::getMotorbikeInfo(){
     std::vector<std::string> data;
-    // no BikeID
+
+    data.push_back(motorbikeID); // 0
     data.push_back(model);
     data.push_back(color);
     data.push_back(std::to_string(engine_size));
@@ -37,7 +41,8 @@ std::vector<std::string> Motorbike::getMotorbikeinfo(){
     data.push_back(end_date);
     data.push_back(std::to_string(min_mem_rating));
     data.push_back(std::to_string(is_listed));
-    data.push_back(std::to_string(is_available));
+    data.push_back(std::to_string(is_available));   // 13
+    
     return data;
 }
 std::string Motorbike::getMotorbikeID(){

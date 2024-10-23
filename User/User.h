@@ -8,10 +8,13 @@ class User{
     public:
         User(){}; //default constructor
         User(std::string username_ip, std::string password_ip);
+        // Getter
         std::string getUsername();
         std::string getPassword();
+        // Setter
         void setUsername(std::string username_ip);
         void setPassword(std::string password_ip);
+
 };
 
 #endif
