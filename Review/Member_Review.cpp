@@ -6,7 +6,8 @@ MemberReview::MemberReview(std::string memReviewID_ip, std::string reviewerID_ip
                     float rating_ip, std::string comment_ip)
                     :memReviewID(memReviewID_ip), reviewerID(reviewerID_ip), 
                     revieweeID(revieweeID_ip), memberReviewStatus(memberReviewStatus_ip), 
-                    Review(rating_ip, comment_ip){
+                    Review(rating_ip, comment_ip)
+                    {
                         if (this->memReviewID.empty()){
                             this->memReviewID = randomIDs("memReview");
                         }

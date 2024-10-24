@@ -1,8 +1,10 @@
 #ifndef REVIEW_H
 #define REVIEW_H
 
-#include <string>
-#include <iostream> //testing
+// #include <string>
+// #include <iostream> //testing
+#include <bits/stdc++.h>
+
 
 class Review {
     private:

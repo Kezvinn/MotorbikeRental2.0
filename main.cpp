@@ -7,11 +7,8 @@
 using namespace std;
 
 int main(){
-    System *system = new System();
-
-    system->init();
-    while (1){
-        system->mainMenu();
-    }
+    System system;
+    system.mainMenu();
+    
     return 0;
 }

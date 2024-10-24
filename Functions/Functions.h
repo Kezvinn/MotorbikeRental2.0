@@ -1,11 +1,12 @@
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
-#include <iostream>
-#include <string>
-#include <random>
-#include <time.h>
-#include <regex>
-#include <sstream>
+// #include <iostream>
+// #include <string>
+// #include <random>
+// #include <time.h>
+// #include <regex>
+// #include <sstream>
+#include <bits/stdc++.h>
 
 // generate random ID for member and motorbike
 std::string randomIDs (std::string type);
@@ -30,4 +31,7 @@ int rentDuration(const std::string &startDate, const std::string &endDate);
 
 // string manipulation functions
 std::vector<std::string> splitString (std::string &str, char delimiter);
+
+
+
 #endif

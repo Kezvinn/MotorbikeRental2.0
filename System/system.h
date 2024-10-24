@@ -1,13 +1,14 @@
 #ifndef SYSTEM_H
 #define SYSTEM_H
 
-#include <string>
-#include <vector>
-#include <fstream>
+// #include <string>
+// #include <vector>
+// #include <fstream>
+#include <bits/stdc++.h>
 
-#include "../user/User.h"
-#include "../user/Admin.h"
-#include "../user/Member.h"
+#include "../User/User.h"
+#include "../User/Member.h"
+#include "../User/Admin.h"
 
 #include "../Review/Review.h"
 #include "../Review/Member_review.h"
@@ -17,8 +18,12 @@
 
 #include "../Request/request.h"
 
-const std::string MEMBER_FILE = "../Data/Member.txt";
-const std::string MOTORBIKE_FILE = "../Data/Motorbike.txt";
+#define TODAY_DATE "24/10/2024"
+
+#define MEMBER_FILE "Data/Member.txt"
+#define MOTORBIKE_FILE "Data/Motorbike.txt"
+
+class Admin;
 
 class System {
     private:
@@ -27,12 +32,11 @@ class System {
         std::vector<Motorbike*> motorbike_list;
 
         // Admin
-        Admin *admin = nullptr;
+        Admin* admin;
         
         // Pointer to current member and motorbike
-        Member *current_member = nullptr;   
-        Motorbike *current_motorbike = nullptr; 
-    
+        Member *current_member;   
+        Motorbike *current_motorbike; 
     public:
     // Default Constructor
         System();
@@ -70,7 +74,4 @@ class System {
         int saveMotorbike();
     
 };
-
-
 #endif
-

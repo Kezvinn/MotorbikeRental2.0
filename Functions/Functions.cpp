@@ -123,16 +123,17 @@ int choiceInRange(int min, int max){
     return choice;
 }
 
-char returnYesNo(){
+char returnYesNo(){ //only accept Y
     char c; 
     do {
-        std::cout << "Return (Y/N)? " << std::endl;
+        std::cout << "Return (Y/N): ";
         std::cin >> c;
         if (std::cin.fail()){
             std::cin.clear();
             std::cin.ignore();
         }
-    } while (tolower(c) != 'y' && tolower(c) != 'n');
+    } while (tolower(c) != 'y');
+    
     return c;
 }
 // Functions to calculate the duration by the different of date

@@ -1,6 +1,9 @@
 #include "System.h"
 // Constructor
 System::System(){
+    admin = new Admin();
+    current_member = nullptr;
+    current_motorbike = nullptr;
     loadMember();
     loadMotorbike();
 }
@@ -22,35 +25,42 @@ std::vector<Motorbike*> &System::getMotorbikeList(){
 // Load data from txt files
 int System::loadMember(){
     member_list.clear();
-    std::string line;
-    
-    std::ifstream file(MEMBER_FILE);
+
+    std::ifstream file;
+    file.open(MEMBER_FILE, std::fstream::in);
     if (!file.is_open()){
-        std::cerr << "Error: Could not open file" << std::endl;
+        std::cerr << "Error: Could not open Member.txt file" << std::endl;
         return 1;
     }
-
+    std::string line;
     while(std::getline(file, line)){
         std::vector<std::string> data;  // store substring of line
+        
         data = splitString (line, '|');
-
-        Member *member = new Member(data[0], data[1], data[2], data[3], 
-                                    data[4], stoi(data[5]), data[6], 
-                                    data[7], data[8], stoi(data[9]), 
-                                    data[10], data[11], stof(data[12]));
+        
+        Member *member = new Member(data[0], data[1], data[2], 
+                                    data[3], data[4], 
+                                    std::stoi(data[5]), data[6], 
+                                    data[7], data[8], 
+                                    std::stoi(data[9]), 
+                                    data[10], data[11], 
+                                    std::stof(data[12]));
         member_list.push_back(member);
     }
     file.close();
+   
     return 0;
 }
 int System::loadMotorbike(){
     motorbike_list.clear();
-    std::string line;
-    std::ifstream file(MOTORBIKE_FILE);
+    std::ifstream file;
+    file.open(MOTORBIKE_FILE, std::fstream::in);
+    
     if (!file.is_open()){
-        std::cerr << "Error: Could not open file" <<std::endl;
+        std::cerr << "Error: Could not open Motorbike.txt file" <<std::endl;
         return 1;
     }
+    std::string line;
     while (std::getline(file,line)){
         std::vector<std::string> data;
         data = splitString(line, '|');
@@ -94,11 +104,17 @@ int System::saveMotorbike(){
 
 //---------------------------Member Functions-----------------------------------------------------//
 int System::memberLogin(){
-    std::string memberID, username_ip, passwork_ip;
-    std::cout << "Username: " << std::endl;
+    std::cout << "+==============================================+" << std::endl;
+    std::cout << "|                  Member Login                |" << std::endl;
+    std::cout << "+==============================================+" << std::endl;
+    std::cin.ignore();
+    std::string username_ip, passwork_ip;
+    std::cout << "Username: ";
     std::getline(std::cin, username_ip);
-    std::cout << "Password: " << std::endl;
+    std::cout << "Password: ";
     std::getline(std::cin, passwork_ip);
+    
+    std::cout << username_ip << "   " << passwork_ip << std::endl;
     
     for (auto mem : member_list){
         if(mem->getUsername() == username_ip && mem->getPassword() == passwork_ip) {
@@ -107,56 +123,10 @@ int System::memberLogin(){
             break;
         }
     }
-
-
-
     // std::cout << "Login Failed" << std::endl;
     return 0; 
 }
-int System::memberMenu(){
-    std::cout << "+==============================================+" << std::endl;
-    std::cout << "|                  Member Menu                 |" << std::endl;
-    std::cout << "+==============================================+" << std::endl;
-    std::cout << "1. View Personal Info " << std::endl;     // in member    //done
-    std::cout << "2. View Motorbike Info" << std::endl;     // in system?   
-    std::cout << "3. View Renting Request" << std::endl;    // in member
-    std::cout << "4. Rate Rented Motorbike" << std::endl;   // in member
-    std::cout << "5. Rate Renter" << std::endl;             // in member
-    std::cout << "6. Rent Motorbike" << std::endl;          // in system?
-    std::cout << "7. Add Credits" << std::endl;             // in member    // done
-    std::cout << "8. Logout" << std::endl;                  // in system
-    
-    int choice;
-    choiceInRange(1, 5);
 
-    switch (choice){
-        case 1:
-            current_member->getMemberInfo();
-            break;
-        case 2:
-            // current_member->getOwnedMotorbikeInfo();
-            break;
-        case 3:
-            // current_member->getRentingRequest();
-            break;
-        case 4:
-            // current_member->rateRentedMotorbike();
-            break;
-        case 5:
-            // current_member->rateRenter();
-            break;
-        case 6:
-            // current_member->rentMotorbike();
-            break;
-        case 7:
-            current_member->addCredits();
-            break;
-        case 8: 
-            logout();
-            break;
-    }
-    
-}
 int System::bikeSignup(Motorbike &newbike){
 
     std::vector<std::string> bike_info;
@@ -345,38 +315,41 @@ int System::mainMenu(){
     std::cout << "4. View Motorbike" << std::endl;
     std::cout << "5. Exit" << std::endl;
 
-    int choice;
-    choiceInRange(1, 5);
-
-    switch (choice){
-        case 1:
-            memberLogin();
-            break;
-        case 2:
-            adminLogin();
-            break;
-        case 3:
-            signup();
-            break;
-        case 4:
-            viewAllMotorbike();
-            break;
-        case 5: 
-            return 1;
+    int choice = choiceInRange(1, 5);
+    while (choice != 5){
+        switch (choice){
+            case 1:
+                memberLogin();
+                break;
+            case 2:
+                adminLogin();
+                break;
+            case 3:
+                signup();
+                break;
+            case 4:
+                viewAllMotorbike();
+                break;
+            case 5:
+                break;  
+        }
     }
+    return 0;
 }
 
 // ---------------------------Admin Menu---------------------------------------------------------//
 int System::adminLogin(){
     std::string admin_username, admin_pwd;
-    
-    std::cout << "Admin username: ";
+    std::cout << "+==============================================+" << std::endl;
+    std::cout << "|                  Admin Login                 |" << std::endl;
+    std::cout << "+==============================================+" << std::endl;
+    std::cout << "Admin Username: ";
     std::cin >> admin_username;
-    std::cout << "Admin password: ";
+    std::cout << "Admin Password: ";
     std::cin >> admin_pwd;
 
     if (admin->adminLogin(admin_username, admin_pwd)){
-        *admin = Admin(admin_username, admin_pwd);
+        // admin = Admin(admin_username, admin_pwd);
         adminMenu();
     } else {
         std::cout << "Login failed!" << std::endl;
@@ -391,8 +364,8 @@ int System::adminMenu(){
     std::cout << "2. View All Motorbike" << std::endl;
     std::cout << "3. Logout" << std::endl;
 
-    int choice;
-    choiceInRange(1, 3);
+    int choice = choiceInRange(1, 3);
+    
     switch (choice){
         case 1:
             admin->viewMember(*this);
@@ -401,7 +374,7 @@ int System::adminMenu(){
             admin->viewMotorbike(*this);
             break;
         case 3:
-            logout();
+            // logout();
             break;
     }
 }
@@ -411,17 +384,16 @@ int System::memberMenu(){
     std::cout << "+==============================================+" << std::endl;
     std::cout << "|                  Member Menu                 |" << std::endl;
     std::cout << "+==============================================+" << std::endl;
-    std::cout << "1. View Personal Info " << std::endl;  // view owned motorbike and choose to list/unlist
-    std::cout << "2. View Motorbike Info" << std::endl;
-    std::cout << "3. View Renting Request" << std::endl;
-    std::cout << "4. Rate Rented Motorbike" << std::endl;
+    std::cout << "1. View Personal Info " << std::endl;     // view personal info
+    std::cout << "2. View Motorbike Info" << std::endl;     // view motorbike info -> choose to list or unlist or leave new Descriptions
+    std::cout << "3. View Renting Request" << std::endl;    // view renting request -> approve or deny
+    std::cout << "4. Rate Rented Motorbike" << std::endl;   // 
     std::cout << "5. Rate Renter" << std::endl;
     std::cout << "6. Rent Motorbike" << std::endl;
     std::cout << "7. Add Credits" << std::endl;
     std::cout << "8. Logout" << std::endl;
     
-    int choice;
-    choiceInRange(1, 5);
+    int choice = choiceInRange(1, 5);
 
     switch (choice){
         case 1:
@@ -446,7 +418,7 @@ int System::memberMenu(){
             current_member->addCredits();
             break;
         case 8: 
-            logout();
+            // logout();
             break;
     }
     

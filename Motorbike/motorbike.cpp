@@ -15,7 +15,7 @@ Motorbike::Motorbike(std::string motorbikeID_ip, std::string model_ip, std::stri
                     start_date(startDate_ip), end_date(endDate_ip), min_mem_rating(min_mem_rating_ip), 
                     is_listed(is_listed_ip), is_available(is_available_ip) 
                     {
-                        if (!this->motorbikeID.empty()){
+                        if (this->motorbikeID.empty()){
                             motorbikeID = randomIDs("motorbike");
                         } else {
                             this->motorbikeID = motorbikeID_ip;
@@ -28,19 +28,19 @@ int Motorbike::getRentCost(){
 std::vector<std::string> Motorbike::getMotorbikeInfo(){
     std::vector<std::string> data;
 
-    data.push_back(motorbikeID); // 0
-    data.push_back(model);
-    data.push_back(color);
-    data.push_back(std::to_string(engine_size));
-    data.push_back(transmission_mode);
-    data.push_back(std::to_string(year_made));
-    data.push_back(desctiption);
-    data.push_back(location);
-    data.push_back(std::to_string(rent_cost));
-    data.push_back(start_date);
-    data.push_back(end_date);
-    data.push_back(std::to_string(min_mem_rating));
-    data.push_back(std::to_string(is_listed));
+    data.push_back(motorbikeID);                    // 0
+    data.push_back(model);                          // 1
+    data.push_back(color);                          // 2                          
+    data.push_back(std::to_string(engine_size));    // 3
+    data.push_back(transmission_mode);              // 4
+    data.push_back(std::to_string(year_made));      // 5
+    data.push_back(desctiption);                    // 6
+    data.push_back(location);                       // 7
+    data.push_back(std::to_string(rent_cost));      // 8
+    data.push_back(start_date);                     // 9     
+    data.push_back(end_date);                       // 10
+    data.push_back(std::to_string(min_mem_rating)); // 11
+    data.push_back(std::to_string(is_listed));      // 12
     data.push_back(std::to_string(is_available));   // 13
     
     return data;
@@ -68,4 +68,14 @@ int Motorbike::setNewMotorbikeInfo(std::vector<std::string> data){
     this->is_listed = std::stoi(data[12]);
     this->is_available = std::stoi(data[13]);
     return 0;
+}
+// get review of the motorbike that align with the member rented bike
+std::vector<MotorbikeReview*> &Motorbike::getMotorbikeReview(){
+    std::vector<MotorbikeReview*> ownBikeReview;
+    for (auto rev: this->motorbikeReview){
+        if (rev->getMotorbikeReviewInfo()[2] == this->motorbikeID){
+            ownBikeReview.push_back(rev);
+        }
+    }
+    return ownBikeReview;
 }

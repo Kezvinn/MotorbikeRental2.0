@@ -6,16 +6,17 @@
 
 class MemberReview : public Review {
     private:
-        std::string memReviewID;    // ID of the review
-        std::string reviewerID;     // member who give the review
-        std::string revieweeID;     // member who receive the review
-        std::string memberReviewStatus; // Pending/Complete
+        std::string memReviewID;            // 0 ID of the review
+        std::string reviewerID;             // 1 member who give the review
+        std::string revieweeID;             // 2 member who receive the review
+        std::string memberReviewStatus;     // 3 Pending/Complete
     public:
         MemberReview();
         MemberReview(std::string memReviewID_ip, std::string reviewerID_ip, 
                     std::string revieweeID_ip, std::string memberReviewStatus_ip,
                     float rating_ip, std::string comment_ip);        
         std::vector<std::string> getMemberReviewInfo();
+        
         float calRating();
 };
 
