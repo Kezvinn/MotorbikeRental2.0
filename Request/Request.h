@@ -23,6 +23,7 @@ class Request {
                 std::string start_date_ip, std::string end_date_ip, 
                 int total_rent_cost_ip, std::string requestStatus_ip);
         std::vector<std::string> getRequestInfo();
+        int showRequestInfo();
 };
 
 

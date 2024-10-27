@@ -45,6 +45,28 @@ std::vector<std::string> Motorbike::getMotorbikeInfo(){
     
     return data;
 }
+int Motorbike::showMotorbikeInfo(){
+    std::cout << std::left;
+    std::cout << std::string(40, '-') << std::endl;
+
+    std::cout << std::setw(23) << "Motorbike ID: "      << this->motorbikeID << std::endl;
+    std::cout << std::setw(23) << "Model: "             << this->model << std::endl;
+    std::cout << std::setw(23) << "Color: "             << this->color << std::endl;
+    std::cout << std::setw(23) << "Engine Size: "       << this->engine_size << std::endl;
+    std::cout << std::setw(23) << "Transmission Mode: " << this->transmission_mode << std::endl;
+    std::cout << std::setw(23) << "Year Made: "         << this->year_made << std::endl;
+    std::cout << std::setw(23) << "Description: "       << this->desctiption << std::endl;
+    std::cout << std::setw(23) << "Location: "          << this->location << std::endl;
+    std::cout << std::setw(23) << "Rent Cost: "         << this->rent_cost << "credits" << std::endl;
+    std::cout << std::setw(23) << "Start Date: "        << this->start_date << std::endl;
+    std::cout << std::setw(23) << "End Date: "          << this->end_date  << std::endl;
+    std::cout << std::setw(23) << "Minimum Member Rating: " << std::fixed << std::setprecision(2) << this->min_mem_rating << std::endl;
+    std::cout << std::setw(23) << "Listed: "            << (this->is_listed ? "Listed":"Unlisted") << std::endl;
+    std::cout << std::setw(23) << "Availability: "      << (this->is_available? "Available":"Unavailable") << std::endl;
+    std::cout << std::string(40, '-') << std::endl;
+
+    return 0;
+}
 std::string Motorbike::getMotorbikeID(){
     return motorbikeID;
 }

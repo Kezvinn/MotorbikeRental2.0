@@ -35,7 +35,7 @@ class System {
         Admin* admin;
         
         // Pointer to current member and motorbike
-        Member *current_member;   
+        Member *current_member;
         Motorbike *current_motorbike; 
     public:
     // Default Constructor
@@ -58,9 +58,9 @@ class System {
     // Member Menu
         int memberLogin();
         int bikeSignup(Motorbike &newbike);
-        int memberMenu();        
+        int memberMenu();     
         int logout();
-
+        int rentMotorbikeMenu();
     // Admin Menu
         int adminLogin();
         int adminMenu();

@@ -1,3 +1,3 @@
-B345|future|red|125|manual|2022|new bike|HCMC|4|12/02/2024|15/02/2024|6.75|1|0
-B223|air blade|green|120|auto|2023|just bought|HN|7|||8.00|0|1
-B940|SH|blue|200|auto|2023|nice bike|HCMC|6|15/06/2024|19/07/2024|6.75|1|0
+B345|Future|Red|125|manual|2022|new bike|HCMC|4|12/02/2024|15/02/2024|6.75|1|0
+B223|Air Blade|Green|120|auto|2023|just bought|HN|7|||8.00|0|1
+B940|SH|Blue|200|auto|2023|nice bike|HCMC|6|15/06/2024|19/07/2024|6.75|1|0

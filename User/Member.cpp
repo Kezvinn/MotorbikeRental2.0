@@ -25,6 +25,20 @@ Member::~Member(){
     delete this->ownedbike;
     delete this->rentedbike;
 }
+
+int Member::memberLogin(std::string &username_ip, std::string &pwd_ip){
+    if ((username_ip == this->getUsername()) && (pwd_ip == this->getPassword())){
+        return true;
+    }
+    return false;
+}
+Motorbike* Member::getOwnedBike() const{ return this->ownedbike; }
+Motorbike* Member::getRentedBike() const{ return this->rentedbike; }
+int Member::setOwnedBike(Motorbike *bike){ this->ownedbike = bike; return 0; }
+int Member::setRentedBike(Motorbike *bike){ this->rentedbike = bike; return 0; }
+
+
+
 std::vector<std::string> Member::getMemberInfo(){
     std::vector<std::string> member_info;
 
@@ -44,22 +58,32 @@ std::vector<std::string> Member::getMemberInfo(){
 
     return member_info;
 }
+
+int Member::addRentRequest(Request *newRequest){
+    this->rentRequest.push_back(newRequest);
+    return 0;
+}
 void Member::showMemberInfo(){
-    std::cout << "--------------------------------------------" << std::endl;
-    std::cout << "Member ID: " << this->memberID << std::endl;
-    std::cout << "Username: " << this->getUsername() << std::endl;
-    std::cout << "Password: " << this->getPassword() << std::endl;
-    std::cout << "Fullname: " << this->fullname << std::endl;
-    std::cout << "Phone number: " << this->phonenumber << std::endl;
-    std::cout << "ID type: " << (this->id_type == 0 ? "Citizen ID" : "Passport") << std::endl;
-    std::cout << "ID number: " << this->id_number << std::endl;
-    std::cout << "Driver license: " << this->drv_license << std::endl;
-    std::cout << "Expire date: " << this->exp_date << std::endl;
-    std::cout << "Credit: " << this->credit << " credits" << std::endl;
-    std::cout << "Owned bike ID: " << this->ownedbikeID << std::endl;
-    std::cout << "Rented bike ID: " << this->rentingbikeID << std::endl;
-    std::cout << "Member rating: " << this->memberRating << std::endl;
-    std::cout << "--------------------------------------------" << std::endl;
+    std::cout << "+==========================================+" << std::endl;
+    std::cout << "|            Member Information            |" << std::endl;
+    std::cout << "+==========================================+" << std::endl;
+
+    std::cout << std::string(30,'-') << std::endl;
+    std::cout << std::left;
+    std::cout << std::setw(18) << "Member ID: "         << this->memberID << std::endl;
+    std::cout << std::setw(18) << "Username: "          << this->getUsername() << std::endl;
+    std::cout << std::setw(18) << "Password: "          << this->getPassword() << std::endl;
+    std::cout << std::setw(18) << "Fullname: "          << this->fullname << std::endl;
+    std::cout << std::setw(18) << "Phone number: "      << this->phonenumber << std::endl;
+    std::cout << std::setw(18) << "ID type: "           << (this->id_type == 0 ? "Citizen ID" : "Passport") << std::endl;
+    std::cout << std::setw(18) << "ID number: "         << this->id_number << std::endl;
+    std::cout << std::setw(18) << "Driver license: "    << this->drv_license << std::endl;
+    std::cout << std::setw(18) << "Expire date: "       << this->exp_date << std::endl;
+    std::cout << std::setw(18) << "Credit: "            << this->credit << " credits" << std::endl;
+    std::cout << std::setw(18) << "Owned bike ID: "     << this->ownedbikeID << std::endl;
+    std::cout << std::setw(18) << "Rented bike ID: "    << this->rentingbikeID << std::endl;
+    std::cout << std::setw(18) << "Member rating: "     << std::fixed << std::setprecision(2) << this->memberRating << std::endl;
+    std::cout << std::string(30, '-') << std::endl;
 }
 
 int Member::rentRequestMenu(){
@@ -68,17 +92,31 @@ int Member::rentRequestMenu(){
     std::cout << "|              Request Menu                |" << std::endl;
     std::cout << "+==========================================+" << std::endl;
     int count = 1;
+    std::cout << std::string(130, '-') << std::endl;
+    std::cout << "No. "   
+              << std::setw(15) << "Request ID"
+              << std::setw(15) << "Renter ID"   
+              << std::setw(15) << "Owner ID"     
+              << std::setw(15) << "Motorbike ID"    
+              << std::setw(15) << "Start Date"
+              << std::setw(15) << "End Date"  
+              << std::setw(15) << "Rent Cost"   
+              << std::setw(10) << "Status" <<  std::endl;
+            
     for(auto rqst : this->rentRequest) {
         std::vector <std::string> rqst_data = rqst->getRequestInfo();
         if (rqst_data[2] == this->memberID && rqst_data[3] == this->ownedbikeID) {  
-            std::cout << "--------------------------------------------" << std::endl;
-            std::cout << "No.   Request ID    Renter ID   OwnerID     Motorbike ID    Start Date  End Date    Rent Cost   Status" <<  std::endl;
-            std::cout << count;
-            std::cout << rqst_data[0] << "  " << rqst_data[1] << "  " 
-                      << rqst_data[2] << "  " << rqst_data[3] << "  " 
-                      << rqst_data[4] << "  " << rqst_data[5] << "  " 
-                      << rqst_data[6] << "  " << rqst_data[7] << std::endl;
-            std::cout << "--------------------------------------------" << std::endl;
+            std::cout << " " << count << "   ";
+            std::cout << std::setw(15) << rqst_data[0]  // Request ID
+                      << std::setw(15) << rqst_data[1]  // Renter ID
+                      << std::setw(15) << rqst_data[2]  // Owner ID
+                      << std::setw(15) << rqst_data[3]  // Motorbike ID
+                      << std::setw(15) << rqst_data[4]  // Start Date
+                      << std::setw(15) << rqst_data[5]  // End Date
+                      << std::setw(15) << rqst_data[6]  // Rent Cost
+                      << std::setw(10) << rqst_data[7]  // Status
+                      << std::endl;
+            std::cout << std::string(130,'-') << std::endl;
             count++;
         }
     }
@@ -96,14 +134,18 @@ int Member::rentRequestMenu(){
             int action = choiceInRange(1, 2);
             if (action == 1){
                 rentRequest[choice-1]->getRequestInfo()[7] = "Approved";
+                std::cout << "Request Approved!" << std::endl;
             } else {
                 rentRequest[choice-1]->getRequestInfo()[7] = "Denied";
+                std::cout << "Request Denied!" << std::endl;
             }
         } else {
-
+            std::cout << "Request already " << rentRequest[choice-1]->getRequestInfo()[7] << std::endl;
+            rentRequestMenu();
         }
 
     }
+    return 0;
 }
 
 // Rate Rented Motorbike
@@ -119,9 +161,12 @@ int Member::rateMotorbikeMenu(){
         std::vector<std::string> rev_data = rev->getMotorbikeReviewInfo();
         std::cout << "--------------------------------------------" << std::endl;
         std::cout << "No.       Review ID       Renter ID       Motorbike ID    Rating       Comment     Status" << std::endl;
-        std::cout << count << "     "<< rev_data[0] << "    "
-                  << rev_data[1] << "    " << rev_data[2] << "    "
-                  << rev_data[3] << "    " << rev_data[4] << "    "
+        std::cout << count << "     " 
+                  << rev_data[0] << "    "
+                  << rev_data[1] << "    " 
+                  << rev_data[2] << "    "
+                  << rev_data[3] << "    " 
+                  << rev_data[4] << "    "
                   << rev_data[5] << std::endl; 
         count++;
     }
@@ -157,10 +202,16 @@ int Member::rateMotorbikeMenu(){
         this->rentedbike->getMotorbikeReview().push_back(bikeReview);
     }
 }
+
 // Top up credit
 int Member::addCredits(){
-    char ans;
+    std::cout << "+==========================================+" << std::endl;
+    std::cout << "|              Add Credits Menu            |" << std::endl;
+    std::cout << "+==========================================+" << std::endl;
+    
     int credit_ip;
+    
+    std::cout << "Current Credits: " << this->credit << " credits" << std::endl;
     std::cout << "--------------------------------------------" << std::endl; 
     do {    
         std::cout << "Enter amount of credits to add (> 0): ";
@@ -172,6 +223,7 @@ int Member::addCredits(){
     } while (credit_ip <= 0);
 
     std::cout << "--------------------------------------------" << std::endl; 
+    char ans;
     do {
         std::cout << "Credit add: " << credit_ip << " credits" <<  std::endl;
         std::cout << "Confirmation (Y/N): ";
@@ -186,7 +238,9 @@ int Member::addCredits(){
     if ((ans == 'Y' || ans == 'y') && credit_ip > 0){
         this->credit += credit_ip;
         std::cout << "You had add " << credit_ip << " credits"<< std::endl;
-        std::cout << "Your current balance: " << this->credit << "credits" << std::endl;
+        std::cout << "Your current balance: " << this->credit << " credits" << std::endl;
+    } else if (ans == 'N' || ans == 'n'){
+        std::cout << "Transaction canceled!" << std::endl;
     }
     return 0;
 }

@@ -41,19 +41,22 @@ class Motorbike {
     
         // getter
         std::vector<std::string> getMotorbikeInfo();    // get all motorbike information
+        int showMotorbikeInfo();    // show all motorbike information
         std::vector<MotorbikeReview*> &getMotorbikeReview();  // get all motorbike review
-        int setNewMotorbikeInfo(std::vector<std::string> data);
         
+        
+        // Getter
         std::string getMotorbikeID();   // get motorbike ID
         int getRentCost();  // get rent cost
-        std::string getbikeLocation();  // get bike location
-
-        bool listed(); // check if bike is listed
-        bool available();  // check if bike is available
-
-        float getMinMemRating();  // get bike rating
-                
-        int bike_status();  //check for is bike is list-unlist/avalable/unavailable
+        // std::string getbikeLocation();  // get bike location
+        // bool isBikeListed(); // check if bike is listed
+        // bool isBikeAvailable();  // check if bike is available
+        // float getMinMemRating();  // get bike rating
+        
+        // setter
+        int setNewMotorbikeInfo(std::vector<std::string> data);
+        int setBikeStartDate(std::string date);
+        int setBikeEndDate(std::string date);
         
 };
 

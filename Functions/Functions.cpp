@@ -21,7 +21,7 @@ std::string randomIDs (std::string type){
     return id;
 }
 // Fucntion to check if the input is only number
-bool isNumber(std::string input){
+bool isNumber(std::string &input){
     std::regex number_regex("^[0-9]+$");
     if (std::regex_match(input, number_regex)){
         return true;
@@ -29,7 +29,7 @@ bool isNumber(std::string input){
     return false;
 }
 // check for number and allow float number
-bool isFloatNumber(std::string input){  
+bool isFloatNumber(std::string &input){  
     std::regex validRegex("^[0-9]*\\.?[0-9]+$");
     if (std::regex_match(input, validRegex)){
         return true;
@@ -37,11 +37,11 @@ bool isFloatNumber(std::string input){
     return false;
 }
 // Function to check if a year is a leap year
-bool isLeapYear(int year) {
+bool isLeapYear(int &year) {
     return (year % 4 == 0 && year % 100 != 0) || (year % 400 == 0);
 }
-// Function to check if the date is valid
-bool isValidDate(int day, int month, int year) {
+// Function to check if the date is valid - need to check for today date
+bool isValidDate(int &day, int &month, int &year) {
     // Array with the maximum days per month
     int daysInMonth[] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
@@ -57,7 +57,7 @@ bool isValidDate(int day, int month, int year) {
     return true;
 }
 // Function to validate date format and logical correctness
-bool isDateValid(const std::string& input) {
+bool isDateValid(const std::string &input) {
     // Regex for DD/MM/YYYY format with only digits and / symbol
     std::regex dateRegex("^([0-3][0-9])/([0-1][0-9])/([0-9]{4})$");
     std::smatch match;
@@ -76,15 +76,15 @@ bool isDateValid(const std::string& input) {
     return false;  // If the format is incorrect
 }
 // Function to check if the input is a letter
-bool isLetter(std::string input){
-    std::regex validRegex("^[A-Za-z ]+$");
+bool isLetter(std::string &input){
+    std::regex validRegex("^[A-Za-z]+$");
      if (std::regex_match(input, validRegex)){
         return true;
     }
     return false;
 }
 
-bool isUsername(std::string username){
+bool isUsername(std::string &username){
     std::regex validRegex("^[A-Za-z0-9]+$");
     if (std::regex_match(username, validRegex)){
         return true;
@@ -92,13 +92,23 @@ bool isUsername(std::string username){
     return false;
 }
 
-bool isPassword(std::string password){
+bool isPassword(std::string &password){
     std::regex validRegex("^[A-Za-z0-9!@#$%^&*()_+\\-=\\[\\]{};:,<.>?]+$");
     if (std::regex_match(password, validRegex)){
         return true;
     }
     return false;
 }
+
+bool isPassport(std::string &passport){
+    std::regex pattern("^[A-Za-z][0-9]{8}$");
+    if (std::regex_match( passport, pattern)){
+        return true;
+    }
+    return false;
+
+}
+
 
 std::vector<std::string> splitString(std::string &str, char delimiter){
     std::vector <std::string> data_result;

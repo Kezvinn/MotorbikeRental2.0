@@ -14,41 +14,43 @@ bool Admin::adminLogin(std::string usename, std::string pwd){
 int Admin::viewMember(System &sys){
     std::vector<Member*> member_list = sys.getMemberList();
     int count = 1;
-    std::cout << "No."
-              << std::setw(colWidth[0]) << "ID#"
-              << std::setw(colWidth[2]) << "Username"
-              << std::setw(colWidth[2]) << "PWD"
-              << std::setw(colWidth[2]) << "Fullname"
-              << std::setw(colWidth[2]) << "Phone#"
-              << std::setw(colWidth[2]) << "ID type"
-              << std::setw(colWidth[2]) << "ID #"
-              << std::setw(colWidth[2]) << "Driver license"
-              << std::setw(colWidth[2]) << "Exp date"
-              << std::setw(colWidth[2]) << "Credit"
-              << std::setw(colWidth[2]) << "Own Bike ID"
-              << std::setw(colWidth[2]) << "Rent Bike ID"
-              << std::setw(colWidth[2]) << "Rating" << std::endl;   
-    std::cout <<std::string(200, '-') << std::endl;
-    
-    for (auto mem : member_list){ 
+    std::cout << std::left;
+    std::cout << "No.  "
+              << std::setw(10) << "ID#"
+              << std::setw(18) << "Username"
+              << std::setw(15) << "PWD"
+              << std::setw(20) << "Fullname"
+              << std::setw(15) << "Phone#"
+              << std::setw(18) << "ID type"
+              << std::setw(18) << "ID#"
+              << std::setw(20) << "Driver license"
+              << std::setw(15) << "Exp. Date"
+              << std::setw(10) << "Credits"
+              << std::setw(15) << "Own Bike ID"
+              << std::setw(16) << "Rent Bike ID"
+              << std::setw(10) << "Rating" << std::endl;   
+    std::cout <<std::string(205, '-') << std::endl;
+    for (auto mem : member_list) { 
         std::vector<std::string> data = mem->getMemberInfo();
-        std::cout << count 
-                  << std::setw(colWidth[1]) << data[0] 
-                  << std::setw(colWidth[2]) << data[1]  
-                  << std::setw(colWidth[2]) << data[2] 
-                  << std::setw(colWidth[2]) << data[3] 
-                  << std::setw(colWidth[2]) << data[4]            
-                  << std::setw(colWidth[2]) << (std::stoi(data[5]) ? "Passport" : "Citizen ID")
-                  << std::setw(colWidth[2]) << data[6] 
-                  << std::setw(colWidth[2]) << data[7] 
-                  << std::setw(colWidth[2]) << data[8] 
-                  << std::setw(colWidth[2]) << data[9] 
-                  << std::setw(colWidth[2]) << data[10]  
-                  << std::setw(colWidth[2]) << data[11] 
-                  << std::setw(colWidth[2]) << data[12] << std::endl;
+        std::cout << std::left;
+        std::cout << " " << count << ".  "     
+                  << std::setw(10) << data[0]           // memberID
+                  << std::setw(17) << data[1]           // username
+                  << std::setw(16) << data[2]           // password (8-14)
+                  << std::setw(20) << data[3]           // fullname
+                  << std::setw(15) << data[4]           // phone number
+                  << std::setw(18) << (std::stoi(data[5]) ? "Passport" : "Citizen ID")
+                  << std::setw(18) << data[6]           // ID number
+                  << std::setw(20) << data[7]           // driver license
+                  << std::setw(18) << data[8]           // expire date
+                  << std::setw(10) << data[9]           // credit
+                  << std::setw(15) << data[10]          // owned bike ID
+                  << std::setw(13) << data[11]          // rent bike ID
+                  << std::setw(8) << std::fixed <<std::setprecision (2) << std::stof(data[12])           // rating
+                  << std::endl;
         count++;
     }   
-    std::cout <<std::string(200, '-') << std::endl;
+    std::cout <<std::string(205, '-') << std::endl;
     char c = returnYesNo();
     if (c == 'Y' || c == 'y'){ 
         sys.adminMenu();  
@@ -58,19 +60,46 @@ int Admin::viewMember(System &sys){
 int Admin::viewMotorbike(System &sys){
     std::vector<Motorbike*> motorbike_list = sys.getMotorbikeList();
     int count = 1;
-    std::cout << "No.\tBike ID\tModel\tColor\tEngine Size\tTransmission Mode\tYearMade\tLocation\tRentCost\tStart Date\tEnd Date\tMin Rating\tListed\tAvailablibility\tDescription" << std::endl;
-    std::cout << "--------------------------------------------------------------" << std::endl;
+    std::cout << std::left;
+    std::cout << "No.   "
+              << std::setw(10) << "BikeID"
+              << std::setw(18) << "Model"
+              << std::setw(10) << "Color"
+              << std::setw(15) << "Engine Sizes"
+              << std::setw(22) << "Transmission Mode"
+              << std::setw(15) << "Year Made"
+              << std::setw(15) << "Location"
+              << std::setw(15) << "Rent Cost"
+              << std::setw(15) << "Start Date"
+              << std::setw(15) << "End Date"
+              << std::setw(15) << "Min Rating"
+              << std::setw(10) << "Listed"
+              << std::setw(16) << "Availability"
+              << std::setw(15) << "Description" 
+              << std::endl;
+    std::cout << std::string(210, '-') << std::endl;
     for (auto bike: motorbike_list){
         std::vector<std::string> data = bike->getMotorbikeInfo();
-        std::cout << count << "\t" 
-                  << data[0] << "\t" << data[1] << "\t" << data[2] << "\t" 
-                  << data[3] << "\t" << data[4] << "\t" << data[5] << "\t" 
-                  << data[7] << "\t" << data[8] << "\t" << data[9] << "\t" 
-                  << data[10] << "\t" << data[11] << "\t" << data[12] << "\t"
-                  << data[13] << "\t" << data[6] << "\t" << std::endl;
+        std::cout << std::left;
+        std::cout << " " << count << ".    "
+                  << std::setw(9) << data[0]    // bikeID
+                  << std::setw(18) << data[1]    // model
+                  << std::setw(14) << data[2]    // color
+                  << std::setw(16) << data[3]    // engine size
+                  << std::setw(19) << data[4]    // transmission mode
+                  << std::setw(15) << data[5]    // year made
+                  << std::setw(17) << data[7]    // location
+                  << std::setw(11) << data[8]    // rent cost
+                  << std::setw(15) << data[9]    // start date
+                  << std::setw(15) << data[10]   // end date
+                  << std::setw(15) << std::fixed << std::setprecision(2) << std::stof(data[11])   // min rating
+                  << std::setw(10) << (std::stoi(data[12])? "Listed":"Unlist")    // listed
+                  << std::setw(16) << (std::stoi(data[13])? "Available":"Unavailable")    // availability
+                  << std::setw(15) << data[6]    // description
+                  << std::endl;
         count++;
     }   
-    std::cout << "---------------------------------------------------------------------------------------------------------------" << std::endl;
+    std::cout << std::string(210, '-') << std::endl;
 
     char c = returnYesNo();
     if (c == 'Y' || c == 'y'){ 

@@ -18,31 +18,27 @@ class Member: public User{
     private:
     // Member ID
         std::string memberID;                               // 0
-    // Member information
-        std::string fullname;                               // 1
-        std::string phonenumber;                            // 2    10 digits
-        bool id_type;   // 0 = Citizen ID, 1 = Passport     // 3    
-        std::string id_number;                              // 4    12 digit for citizen ID, passport 1 initial letter +8 numbers
-        std::string drv_license;                            // 5    12 digits
-        std::string exp_date;                               // 6    
-        int credit = 20;    // default credit               // 7 
+    // Member information                                   // 1-2 = username, password
+        std::string fullname;                               // 3
+        std::string phonenumber;                            // 4    10 digits
+        bool id_type;   // 0 = Citizen ID, 1 = Passport     // 5    
+        std::string id_number;                              // 6    12 digit for citizen ID, passport 1 initial letter +8 numbers
+        std::string drv_license;                            // 7    12 digits
+        std::string exp_date;                               // 8    
+        int credit = 20;    // default credit               // 9 
     // pointer to bike own and rent
         Motorbike *ownedbike;   // pointer to the motorbike that the member is own
         Motorbike *rentedbike;  // pointer to the motorbike that the member is renting
     // Motorbike ID -- owned and rented
-        std::string ownedbikeID;                            // 8
-        std::string rentingbikeID;                           // 9
+        std::string ownedbikeID;                            // 10
+        std::string rentingbikeID;                          // 11
     // Rating
-        float memberRating;                                 // 10
+        float memberRating;                                 // 12
     // Request and Reivew
         std::vector<Request*> rentRequest;
         std::vector<MemberReview*> memberReview; 
 
         std::vector<std::string> rentedBikeHistory; // store rented bike ID that had not been rate
-
-    // Pointer to Request and Review of the members
-        // Request *current_request;
-        // MemberReview *current_review;
     public:
         // Constructor
         Member(); //default constructor
@@ -56,11 +52,18 @@ class Member: public User{
         // Destructor
         ~Member();
 
+        int memberLogin(std::string &username_ip, std::string &pwd_ip);                      // Member login
+        
+        Motorbike* getOwnedBike() const;                                                          // Get owned bike
+        Motorbike* getRentedBike() const;                                                         // Get rented bike
+        // Setter
+        int setOwnedBike(Motorbike *ownedbike_ip);                                               // Set owned bike
+        int setRentedBike(Motorbike *rentedbike_ip);                                             // Set rented bike
         // Getter
         std::vector<std::string> getMemberInfo();       // get all member information
+        int addRentRequest(Request *newRequest);         // add new rent request
         // Show Member Info
         void showMemberInfo();                          // show all member information
-                
         // show motorbike info (owned bike info) - done in system - look for own bike pointer and get info
         
         // show renting request (display based on own bike ID and pointer)
@@ -71,12 +74,9 @@ class Member: public User{
         
         // rate renter (display based on reviewee ID)
         int rateRenterMenu();
-        
-        // rent motorbike (display based on own bike ID and pointer)
-        int rentMotorbikeMenu();
+
         // add credit
         int addCredits();
-
         // Logout (save all information back to file)
         int logout();
 

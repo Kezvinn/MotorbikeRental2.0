@@ -30,3 +30,15 @@ std::vector<std::string> Request::getRequestInfo(){
     
     return data;
 }
+int Request::showRequestInfo(){
+    std::cout << std::left;
+    std::cout << std::setw(18) << "Request ID: " << this->requestID << std::endl;
+    std::cout << std::setw(18) << "Renter ID: " << this->renterID << std::endl;
+    std::cout << std::setw(18) << "Owner ID: " << this->ownerID << std::endl;
+    std::cout << std::setw(18) << "Motorbike ID: " << this->motorbikeID << std::endl;
+    std::cout << std::setw(18) << "Start Date: " << this->start_date << std::endl;
+    std::cout << std::setw(18) << "End Date: " << this->end_date << std::endl;
+    std::cout << std::setw(18) << "Total Rent Cost: " << this->total_rent_cost << " credits" << std::endl;
+    std::cout << std::setw(18) << "Request Status: " << this->requestStatus << std::endl;
+    return 0;
+}
