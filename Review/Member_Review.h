@@ -12,9 +12,13 @@ class MemberReview : public Review {
         std::string memberReviewStatus;     // 3 Pending/Complete
     public:
         MemberReview();
+        // parameterized constructor use for creating new review
         MemberReview(std::string memReviewID_ip, std::string reviewerID_ip, 
-                    std::string revieweeID_ip, std::string memberReviewStatus_ip,
-                    float rating_ip, std::string comment_ip);        
+                     std::string revieweeID_ip, std::string memberReviewStatus_ip);
+        //  parameterized constructor - use for loading review from file
+        MemberReview(std::string memReviewID_ip, std::string reviewerID_ip, 
+                     std::string revieweeID_ip, std::string memberReviewStatus_ip,
+                     float rating_ip, std::string comment_ip);        
         std::vector<std::string> getMemberReviewInfo();
         
         float calRating();

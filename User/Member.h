@@ -34,14 +34,24 @@ class Member: public User{
         std::string rentingbikeID;                          // 11
     // Rating
         float memberRating;                                 // 12
+    
     // Request and Reivew
         std::vector<Request*> rentRequest;
         std::vector<MemberReview*> memberReview; 
 
         std::vector<std::string> rentedBikeHistory; // store rented bike ID that had not been rate
     public:
-        // Constructor
-        Member(); //default constructor
+        // Default constructor
+        Member(); 
+        // Parameterized constructor - use this to create new member
+        Member(std::string username_ip, std::string password_ip,
+               std::string fullname_ip, std::string phonenumber_ip, 
+               bool id_type_ip, std::string id_number_ip, 
+               std::string drv_license_ip, std::string exp_date_ip, 
+               int credit_ip, 
+               std::string ownedbikeID_ip, std::string rentedbikeID_ip,
+               float memberRating_ip);
+        // Parameterized constructor - use this to load member from file    
         Member(std::string memberID_ip, std::string username_ip, std::string password_ip,
                std::string fullname_ip, std::string phonenumber_ip, 
                bool id_type_ip, std::string id_number_ip, 
@@ -57,28 +67,32 @@ class Member: public User{
         Motorbike* getOwnedBike() const;                                                          // Get owned bike
         Motorbike* getRentedBike() const;                                                         // Get rented bike
         // Setter
-        int setOwnedBike(Motorbike *ownedbike_ip);                                               // Set owned bike
-        int setRentedBike(Motorbike *rentedbike_ip);                                             // Set rented bike
+        int setOwnedBike(Motorbike *ownedbike_ip);        // Set owned bike ptr
+        int setRentedBike(Motorbike *rentedbike_ip);      // Set rented bike ptr
+        int setOwnbikeID(std::string bikeID);             // Set owned bike ID
+        int setRentBikeID(std::string bikeID);            // Set rented bike ID
+
         // Getter
         std::vector<std::string> getMemberInfo();       // get all member information
+        std::string getOwnbikeID();                     // get owned bike ID
+        std::string getRentBikeID();                    // get rented bike ID
+        std::string getMemberID();                      // get member ID
         int addRentRequest(Request *newRequest);         // add new rent request
+        int addMemberReview(MemberReview *newReview);    // add new member review
+        
+        // Member Menu Methods
         // Show Member Info
-        void showMemberInfo();                          // show all member information
-        // show motorbike info (owned bike info) - done in system - look for own bike pointer and get info
-        
-        // show renting request (display based on own bike ID and pointer)
-        int rentRequestMenu();
-        
-        // rate rented motorbike (display based on rented bike ID and pointer)
-        int rateMotorbikeMenu(); 
-        
-        // rate renter (display based on reviewee ID)
-        int rateRenterMenu();
-
+        void showMemberInfo();      // 1
+        // Show renting request
+        int rentRequestMenu();      // 3
+        // Rate rented motorbike
+        int rateMotorbikeMenu();    // 4
+        // Rate renter 
+        int rateRenterMenu();       // 5
         // add credit
-        int addCredits();
-        // Logout (save all information back to file)
-        int logout();
+        int addCredits();           // 7
+        // Logout
+        int logout();               // 8
 
         // File handling functions
         // Load request and review from File (based on Current Member ID)
@@ -90,8 +104,8 @@ class Member: public User{
 
 
         // check for member owned bike and renting bike if have
+
         
 };
 
-
-#endif 
+#endif

@@ -2,6 +2,11 @@
 
 MotorbikeReview::MotorbikeReview(){};
 MotorbikeReview::MotorbikeReview(std::string motorbikeReviewID_ip, std::string renterID_ip, 
+                    std::string rentedMotorbikeID_ip, std::string motorbikeReviewStatus_ip):
+                    motorbikeReviewID(motorbikeReviewID_ip), renterID(renterID_ip), 
+                    rentedMotorbikeID(rentedMotorbikeID_ip), motorbikeReviewStatus(motorbikeReviewStatus_ip){} 
+                    
+MotorbikeReview::MotorbikeReview(std::string motorbikeReviewID_ip, std::string renterID_ip, 
                     std::string rentedMotorbikeID_ip, std::string motorbikeReviewStatus_ip, 
                     float rating_ip, std::string comment_ip)
                     :motorbikeReviewID(motorbikeReviewID_ip), renterID(renterID_ip), 

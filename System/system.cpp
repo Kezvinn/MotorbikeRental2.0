@@ -4,14 +4,55 @@ System::System(){
     admin = new Admin();
     current_member = nullptr;
     current_motorbike = nullptr;
-    loadMember();
-    loadMotorbike();
 }
 // Destructor
 System::~System(){
     delete admin;
     delete current_member;
     delete current_motorbike;
+}
+int System::init(){
+    loadMember();       // load member
+    loadMotorbike();    // load bike
+
+    for (auto bike : motorbike_list) {
+        if (rentDuration(bike->getMotorbikeInfo()[10], TODAY_DATE) < 0){ // out of date for rent
+            for (auto owner : member_list) { 
+                // check for owner
+                if (owner->getOwnbikeID() == bike->getMotorbikeID()){
+                    // create and add new reivew for member
+                    MemberReview *mem_review = new MemberReview(randomIDs("memberreview"),  // review ID
+                                                                owner->getMemberID(),         // reviewer
+                                                                bike->getRenterID(),        // reviewee
+                                                                "Pending");                 // status
+                    // add member review
+                    owner->addMemberReview(mem_review);   // add review for member
+                }
+            }
+            for (auto renter : member_list){
+                // check for renter
+                if (renter->getMemberID() == bike->getRenterID()){
+                    // Create a new review for bike
+                    MotorbikeReview *bike_review = new MotorbikeReview(randomIDs("bikereview"), 
+                                                                    renter->getMemberID(),
+                                                                    bike->getMotorbikeID(),
+                                                                    "Pending");
+                    // add review for bike
+                    bike->addBikeReview(bike_review);
+                    // clear renter ID and pointer
+                    renter->setRentBikeID("");  // clear rent bike ID
+                    renter->setRentedBike(nullptr); // clear rented bike
+                }
+            }
+            
+            // Reset value for bike
+            bike->setBikeStartDate(""); // clear start date
+            bike->setBikeEndDate("");   // clear end date
+            bike->setBikeAvailability(true);    // set bike available
+            bike->setRenterID("");      // clear renter ID
+        }
+    }
+    return 0;
 }
 
 std::vector<Member*> &System::getMemberList(){
@@ -64,10 +105,10 @@ int System::loadMotorbike(){
     while (std::getline(file,line)){
         std::vector<std::string> data;
         data = splitString(line, '|');
-        Motorbike *bike = new Motorbike (data[0], data[1], data[2], stoi(data[3]), 
-                                        data[4], stoi(data[5]), data[6], data[7], 
-                                        stoi(data[8]), data[9], data[10], 
-                                        stof(data[11]), stoi(data[12]), stoi(data[13]));
+        Motorbike *bike = new Motorbike (data[0], data[1], data[2], std::stoi(data[3]), 
+                                        data[4], std::stoi(data[5]), data[6], data[7], 
+                                        std::stoi(data[8]), data[9], data[10], 
+                                        std::stof(data[11]), std::stoi(data[12]), std::stoi(data[13]), data[14]);
         motorbike_list.push_back(bike);
     }
     file.close();
@@ -98,7 +139,11 @@ int System::saveMotorbike(){
         return 1;
     }
     for(auto bike : motorbike_list){
-      
+        std::vector<std::string> data = bike->getMotorbikeInfo();
+        file << data[0] << '|' << data[1] << '|' << data[2] << '|' << data[3] << '|' 
+             << data[4] << '|' << data[5] << '|' << data[6] << '|' << data[7] << '|' 
+             << data[8] << '|' << data[9] << '|' << data[10] << '|' << data[11] << '|' 
+             << data[12] << '|' << data[13] << std::endl;
     }
     return 0;
 }
@@ -123,6 +168,7 @@ int System::memberLogin(){
             break;
         }
     }
+    // check for bike that own and bike that currently rentinng (check by date)
     bool ownbike_flag = false;
     bool rentbike_flag = false;
     if (current_member != nullptr){
@@ -132,7 +178,7 @@ int System::memberLogin(){
                 ownbike_flag = true;
             } 
             
-            if (current_member->getMemberInfo()[11] == bike->getMotorbikeID()){
+            if (current_member->getMemberInfo()[11] == bike->getMotorbikeID()){     //check for the id saved in rentbikeID
                 current_member->setRentedBike(bike);
                 rentbike_flag = true;
             } 
@@ -187,6 +233,7 @@ int System::bikeSignup(Motorbike &newbike){
         std::cout << "Enter year made: ";   
         std::cin >> bike_info[5];
     } while (isNumber(bike_info[5]));
+    
     std::cin.ignore();
     
     // Description
@@ -468,9 +515,9 @@ int System::memberMenu(){
     std::cout << "2. View Motorbike Info" << std::endl;     // view motorbike info -> choose to list or unlist or leave new Descriptions
     std::cout << "3. View Renting Requests" << std::endl;    // view renting request -> approve or deny
     std::cout << "4. Review Rented Motorbikes" << std::endl;   // 
-    std::cout << "5. Review Renters" << std::endl;
-    std::cout << "6. Rent Motorbike" << std::endl;
-    std::cout << "7. Add Credits" << std::endl;
+    std::cout << "5. Review Renters" << std::endl;      
+    std::cout << "6. Rent Motorbike" << std::endl;              // completed but need to test
+    std::cout << "7. Add Credits" << std::endl;                 // this work
     std::cout << "8. Logout" << std::endl;
     
     int choice = choiceInRange(1, 8);
@@ -489,10 +536,10 @@ int System::memberMenu(){
             memberMenu();
             break;
         case 4:
-            // current_member->rateRentedMotorbike();
+            current_member->rateMotorbikeMenu();
             break;
         case 5:
-            // current_member->rateRenter();
+            current_member->rateRenterMenu();
             break;
         case 6:
             rentMotorbikeMenu();
@@ -501,7 +548,7 @@ int System::memberMenu(){
             current_member->addCredits();
             break;
         case 8: 
-            // logout();
+            logout();
             break;
     }
     return 0;   
@@ -603,6 +650,26 @@ int System::rentMotorbikeMenu(){
                                           start_date, end_date, 
                                           totalRentCost, "Pending");
         current_member->addRentRequest(newRequest);   
+    }
+    return 0;
+}
+
+
+int System::logout(){
+    saveMember();
+    saveMotorbike();
+    current_member->logout();
+    current_motorbike->logout();
+
+    current_member = nullptr;
+    current_motorbike = nullptr;
+    admin = nullptr;
+
+    for(auto mem : member_list){
+        delete mem;
+    }
+    for(auto bike : motorbike_list){
+        delete bike;
     }
     return 0;
 }

@@ -1,9 +1,6 @@
 #ifndef SYSTEM_H
 #define SYSTEM_H
 
-// #include <string>
-// #include <vector>
-// #include <fstream>
 #include <bits/stdc++.h>
 
 #include "../User/User.h"
@@ -18,7 +15,7 @@
 
 #include "../Request/request.h"
 
-#define TODAY_DATE "24/10/2024"
+#define TODAY_DATE "01/11/2024"
 
 #define MEMBER_FILE "Data/Member.txt"
 #define MOTORBIKE_FILE "Data/Motorbike.txt"
@@ -44,22 +41,25 @@ class System {
     // Destructor
         ~System();
 
+    // init();
+    int init();
+
     // Getter
         std::vector<Member*> &getMemberList();
         std::vector<Motorbike*> &getMotorbikeList();
-        
+    
     // Main Menu
         int mainMenu();
         
     // Non-Member
-        int viewAllMotorbike(); 
+        int viewAllMotorbike();
         int signup();
         
     // Member Menu
         int memberLogin();
         int bikeSignup(Motorbike &newbike);
-        int memberMenu();     
-        int logout();
+        int memberMenu();       // have all the function for member (in Member class)
+        // int logout();
         int rentMotorbikeMenu();
     // Admin Menu
         int adminLogin();
@@ -72,6 +72,9 @@ class System {
         // Save data to txt files 
         int saveMember();
         int saveMotorbike();
+    // logout
+        int logout();
     
 };
 #endif
+

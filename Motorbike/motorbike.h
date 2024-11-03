@@ -1,10 +1,12 @@
 #ifndef MOTORBIKE_H
 #define MOTORBIKE_H
 
-#include <bits/stdc++.h>
+// #include <bits/stdc++.h>
 
 #include "../Functions/Functions.h"
 #include "../Review/Motorbike_Review.h"
+
+#define MOTORBIKE_REVIEW_FILE "Data/Motorbike_Review.txt"
 
 class Motorbike {
     private:
@@ -27,37 +29,55 @@ class Motorbike {
         bool is_listed;                 // 12
         bool is_available;              // 13   // use this to check if the bike is available to rent or not
                                                 // check for period of rent if it clash with other renter 
+    // Renter(Member)ID
+        std::string renterID;
     // Bike Review
         std::vector<MotorbikeReview*> motorbikeReview;
         
     public:
+        // Default constructor
+        Motorbike();
+        // Parameterized constructor - use this for sign up new bike    
+        Motorbike(std::string model_ip, std::string color_ip, int engine_size_ip, 
+        std::string transmission_mode_ip, int year_made_ip, std::string desctiption_ip, std::string location_ip, 
+        int rent_cost_ip, std::string startDate_ip, std::string endDate_ip,
+        float min_mem_rating_ip, bool is_listed_ip, bool is_available_ip,std::string renterID_ip);
     
-    // constructor
-        Motorbike();    //default constructor
+        // Parameterized constructor - use this to load motorbike from file
         Motorbike(std::string motorbikeID_ip, std::string model_ip, std::string color_ip, int engine_size_ip, 
         std::string transmission_mode_ip, int year_made_ip, std::string desctiption_ip, std::string location_ip, 
         int rent_cost_ip, std::string startDate_ip, std::string endDate_ip,
-        float min_mem_rating_ip, bool is_listed_ip, bool is_available_ip);
+        float min_mem_rating_ip, bool is_listed_ip, bool is_available_ip,std::string renterID_ip);
     
-        // getter
-        std::vector<std::string> getMotorbikeInfo();    // get all motorbike information
-        int showMotorbikeInfo();    // show all motorbike information
+        // Getter
+        // Get all motorbike information into a vector string
+        // Display all motorbike information
+        int showMotorbikeInfo();
         std::vector<MotorbikeReview*> &getMotorbikeReview();  // get all motorbike review
         
-        
+
         // Getter
+        std::vector<std::string> getMotorbikeInfo();
         std::string getMotorbikeID();   // get motorbike ID
         int getRentCost();  // get rent cost
-        // std::string getbikeLocation();  // get bike location
-        // bool isBikeListed(); // check if bike is listed
-        // bool isBikeAvailable();  // check if bike is available
-        // float getMinMemRating();  // get bike rating
+        std::string getStartdate(); // get start date
+        std::string getEnddate();   // get end date
+        std::string getRenterID();   // get renter ID
         
-        // setter
+        // Setter
         int setNewMotorbikeInfo(std::vector<std::string> data);
         int setBikeStartDate(std::string date);
         int setBikeEndDate(std::string date);
-        
+        int setBikeAvailability(bool status);
+        int setRenterID(std::string renterID);
+        // add review into vector
+        int addBikeReview(MotorbikeReview *review);  // add bike review
+
+        // Files handling methods
+        int loadMotorbikeReview();
+        int saveMotorbikeReview();
+
+        int logout();        
 };
 
 

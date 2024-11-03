@@ -53,7 +53,7 @@ bool isValidDate(int &day, int &month, int &year) {
     // Check if month is valid and day is within the valid range for that month
     if (month < 1 || month > 12) return false;
     if (day < 1 || day > daysInMonth[month - 1]) return false;
-
+    
     return true;
 }
 // Function to validate date format and logical correctness
@@ -108,7 +108,18 @@ bool isPassport(std::string &passport){
     return false;
 
 }
+// get real time date of today
+std::string todayDate(){
+    auto now = std::chrono::system_clock::now();
+    std::time_t currentTime = std::chrono::system_clock::to_time_t(now);
+    std::tm localTime = *std::localtime(&currentTime);
 
+    std::ostringstream oss;
+    oss << std::put_time(&localTime, "%d/%m/%Y");
+    std::string date = oss.str();
+    
+    return date;
+}
 
 std::vector<std::string> splitString(std::string &str, char delimiter){
     std::vector <std::string> data_result;
