@@ -21,7 +21,6 @@ class MemberReview : public Review {
                      float rating_ip, std::string comment_ip);        
         std::vector<std::string> getMemberReviewInfo();
         
-        float calRating();
 };
 
 #endif

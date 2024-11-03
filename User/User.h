@@ -8,7 +8,9 @@ class User{
         std::string username;
         std::string password;
     public:
-        User(); //default constructor
+        // Default constructor
+        User();
+        // Parameterized constructor 
         User(std::string username_ip, std::string password_ip);
         // Getter
         std::string getUsername();

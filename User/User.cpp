@@ -1,7 +1,8 @@
 #include "User.h"
 
-// Constructor
-User::User(){}; //default constructor
+// Default constructor
+User::User(){};
+// Parameterized constructor 
 User::User(std::string username_ip, std::string password_ip)
             :username(username_ip), password(password_ip){};
 

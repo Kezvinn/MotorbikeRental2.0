@@ -24,48 +24,42 @@ class Admin;
 
 class System {
     private:
+        // Admin
+        Admin* admin;
         // Members and Motorbike vector pointer
         std::vector<Member*> member_list;
         std::vector<Motorbike*> motorbike_list;
-
-        // Admin
-        Admin* admin;
-        
         // Pointer to current member and motorbike
         Member *current_member;
         Motorbike *current_motorbike; 
     public:
     // Default Constructor
         System();
-        
     // Destructor
         ~System();
 
-    // init();
     int init();
 
-    // Getter
+    // Getter to serve the Admin class
         std::vector<Member*> &getMemberList();
         std::vector<Motorbike*> &getMotorbikeList();
     
     // Main Menu
         int mainMenu();
-        
+    // Admin Menu
+        int adminLogin();
+        int adminMenu();    
     // Non-Member
         int viewAllMotorbike();
         int signup();
         
     // Member Menu
         int memberLogin();
-        int bikeSignup(Motorbike &newbike);
+        int bikeSignup();
         int memberMenu();       // have all the function for member (in Member class)
-        // int logout();
         int rentMotorbikeMenu();
-    // Admin Menu
-        int adminLogin();
-        int adminMenu();
     
-    // file handling
+    // File handling
         // Load data from txt files
         int loadMember();
         int loadMotorbike();
@@ -74,7 +68,6 @@ class System {
         int saveMotorbike();
     // logout
         int logout();
-    
 };
 #endif
 

@@ -55,234 +55,84 @@ int System::init(){
     return 0;
 }
 
-std::vector<Member*> &System::getMemberList(){
-    return member_list;
-}
-std::vector<Motorbike*> &System::getMotorbikeList(){
-    return motorbike_list;
-}
-
-// ---------------------------File Handling Functions---------------------------------------------//
-// Load data from txt files
-int System::loadMember(){
-    member_list.clear();
-
-    std::ifstream file;
-    file.open(MEMBER_FILE, std::fstream::in);
-    if (!file.is_open()){
-        std::cerr << "Error: Could not open Member.txt file" << std::endl;
-        return 1;
-    }
-    std::string line;
-    while(std::getline(file, line)){
-        std::vector<std::string> data;  // store substring of line
-        
-        data = splitString (line, '|');
-        
-        Member *member = new Member(data[0], data[1], data[2], 
-                                    data[3], data[4], 
-                                    std::stoi(data[5]), data[6], 
-                                    data[7], data[8], 
-                                    std::stoi(data[9]), 
-                                    data[10], data[11], 
-                                    std::stof(data[12]));
-        member_list.push_back(member);
-    }
-    file.close();
-   
-    return 0;
-}
-int System::loadMotorbike(){
-    motorbike_list.clear();
-    std::ifstream file;
-    file.open(MOTORBIKE_FILE, std::fstream::in);
-    
-    if (!file.is_open()){
-        std::cerr << "Error: Could not open Motorbike.txt file" <<std::endl;
-        return 1;
-    }
-    std::string line;
-    while (std::getline(file,line)){
-        std::vector<std::string> data;
-        data = splitString(line, '|');
-        Motorbike *bike = new Motorbike (data[0], data[1], data[2], std::stoi(data[3]), 
-                                        data[4], std::stoi(data[5]), data[6], data[7], 
-                                        std::stoi(data[8]), data[9], data[10], 
-                                        std::stof(data[11]), std::stoi(data[12]), std::stoi(data[13]), data[14]);
-        motorbike_list.push_back(bike);
-    }
-    file.close();
-    return 0;
-}
-// Save data to txt files
-int System::saveMember(){
-    std::ofstream file;
-    file.open(MEMBER_FILE, std::fstream::out);
-    if (!file.is_open()){
-        std::cerr << "Error: Could not open file" << std::endl;
-        return 1;
-    }
-
-    for (auto mem : member_list){
-        std::vector<std::string> data = mem->getMemberInfo();
-        file << mem->getUsername() << '|' << mem->getPassword() << '|' << data[2] << '|'
-             << data[3] << '|' << data[4] << '|' << data[5] << '|'
-             << data[6] << '|' << data[7] << '|' << data[8] << std::endl;
-    }
-    return 0;
-}
-int System::saveMotorbike(){
-    std::ofstream file;
-    file.open(MOTORBIKE_FILE, std::fstream::out);
-    if (!file.is_open()){
-        std::cerr << "Error: Could not open file" << std::endl;
-        return 1;
-    }
-    for(auto bike : motorbike_list){
-        std::vector<std::string> data = bike->getMotorbikeInfo();
-        file << data[0] << '|' << data[1] << '|' << data[2] << '|' << data[3] << '|' 
-             << data[4] << '|' << data[5] << '|' << data[6] << '|' << data[7] << '|' 
-             << data[8] << '|' << data[9] << '|' << data[10] << '|' << data[11] << '|' 
-             << data[12] << '|' << data[13] << std::endl;
-    }
-    return 0;
-}
-//------------------------------------------------------------------------------------------------//
-
-//---------------------------Member Functions-----------------------------------------------------//
-int System::memberLogin(){
+std::vector<Member*> &System::getMemberList(){ return member_list; }
+std::vector<Motorbike*> &System::getMotorbikeList(){ return motorbike_list; }
+// --------------------------- Main Menu -----------------------------------------------------------//
+int System::mainMenu(){
     std::cout << "+==============================================+" << std::endl;
-    std::cout << "|                  Member Login                |" << std::endl;
+    std::cout << "|                  Main Menu                   |" << std::endl;
     std::cout << "+==============================================+" << std::endl;
-    std::cin.ignore();
-    std::string username_ip, passwork_ip;
-    std::cout << "Username: ";
-    std::getline(std::cin, username_ip);
-    std::cout << "Password: ";
-    std::getline(std::cin, passwork_ip);
+    std::cout << "1. Member Login" << std::endl;
+    std::cout << "2. Admin Login" << std::endl;
+    std::cout << "3. Sign up" << std::endl;
+    std::cout << "4. View Motorbike" << std::endl;
+    std::cout << "5. Exit" << std::endl;
+
+    int choice = choiceInRange(1, 5);
+    while (choice != 5){
+        switch (choice){
+            case 1:
+                memberLogin() ? memberMenu() : mainMenu();
+                break;
+            case 2:
+                adminLogin();
+                break;
+            case 3:
+                signup();
+                break;
+            case 4:
+                viewAllMotorbike();
+                break;
+            case 5:
+                std::cout << "Thank you and goodbye!" << std::endl;
+                break;  
+        }
+    }
+    return 0;
+}
+
+// --------------------------- Admin Menu ---------------------------------------------------------//
+int System::adminLogin(){
+    std::string admin_username, admin_pwd;
+    std::cout << "+==============================================+" << std::endl;
+    std::cout << "|                  Admin Login                 |" << std::endl;
+    std::cout << "+==============================================+" << std::endl;
+    std::cout << "Admin Username: ";
+    std::cin >> admin_username;
+    std::cout << "Admin Password: ";
+    std::cin >> admin_pwd;
+
+    if (admin->adminLogin(admin_username, admin_pwd)){
+        adminMenu();
+    } else {
+        std::cout << "Login failed!" << std::endl;
+        mainMenu();
+    }
+    return 0;
+}
+int System::adminMenu(){
+    std::cout << "+==============================================+" << std::endl;
+    std::cout << "|               Administrator Menu             |" << std::endl;
+    std::cout << "+==============================================+" << std::endl;
+    std::cout << "1. View All Member" << std::endl;
+    std::cout << "2. View All Motorbike" << std::endl;
+    std::cout << "3. Logout" << std::endl;
+
+    int choice = choiceInRange(1, 3);
     
-    for (auto mem : member_list){
-        if (mem->memberLogin(username_ip, passwork_ip) == true){
-            std::cout << "Login Successfully" << std::endl;
-            current_member = mem;
+    switch (choice){
+        case 1:
+            admin->viewMember(*this);
             break;
-        }
+        case 2:
+            admin->viewMotorbike(*this);
+            break;
+        case 3:
+            logout();
+            break;
     }
-    // check for bike that own and bike that currently rentinng (check by date)
-    bool ownbike_flag = false;
-    bool rentbike_flag = false;
-    if (current_member != nullptr){
-        for (auto bike : motorbike_list){
-            if (current_member->getMemberInfo()[10] == bike->getMotorbikeID()){
-                current_member->setOwnedBike(bike);
-                ownbike_flag = true;
-            } 
-            
-            if (current_member->getMemberInfo()[11] == bike->getMotorbikeID()){     //check for the id saved in rentbikeID
-                current_member->setRentedBike(bike);
-                rentbike_flag = true;
-            } 
-        }
-        if (!ownbike_flag){
-            current_member->setOwnedBike(nullptr);
-        }
-        if (!rentbike_flag){
-            current_member->setRentedBike(nullptr);
-        }
-        std::cout << "Login Successfully" << std::endl;
-        return true;
-    }
-    std::cout << "Wrong Username or Password. Login Failed!" << std::endl;
-    return false; 
-}
-
-int System::bikeSignup(Motorbike &newbike){
-
-    std::vector<std::string> bike_info;
-    // ID
-    bike_info[0] = randomIDs("motorbike");
-    
-    // Model
-    std::cout << "Enter Motorbike model: ";
-    std::getline(std::cin, bike_info[1]);
-
-    // Color
-    do {
-        std::cout << "Enter color: ";
-        std::getline(std::cin, bike_info[2]);
-    } while (isLetter(bike_info[2]));
-    
-    // Engine size
-    do {
-        std::cout << "Enter engine size in cubic centermeter (cc): ";
-        std::cin >> bike_info[3];
-    } while (isNumber(bike_info[3]));
-    
-    // Transmission mode
-    int choice = 0;
-    do {
-        std::cout << "Enter transmission mode: ";
-        std::cout << "1. Manual" << std::endl;
-        std::cout << "2. Automatic" << std::endl;    
-    } while (choiceInRange(1,2));
-    if (choice == 1) { bike_info[4] = "Manual"; }
-    else if (choice == 2) { bike_info[4] = "Automatic"; }
-    
-    // Year made
-    do {
-        std::cout << "Enter year made: ";   
-        std::cin >> bike_info[5];
-    } while (isNumber(bike_info[5]));
-    
-    std::cin.ignore();
-    
-    // Description
-    std::cout << "Enter description: ";
-    std::getline(std::cin, bike_info[6]);
-    
-    // Location
-    do {    
-        std::cout << "Available location: " << std::endl;
-        std::cout << "1. Hanoi (HN)" << std::endl;
-        std::cout << "2. Ho Chi Minh (HCM)" << std::endl;
-    } while (choiceInRange(1, 2));
-    if (choice == 1) { bike_info[7] = "HN"; }
-    else if (choice == 2) { bike_info[7] = "HCM"; }
-    
-    // Rent cost
-    do {
-        std::cout << "Enter rent cost: ";
-        std::cin >> bike_info[8];
-    } while (isNumber(bike_info[8]));
-
-    bike_info[9] = "";  // start date
-    bike_info[10] = ""; // end date
-    
-    // Minimum member rating
-    do {
-        std::cout << "Enter minimum member rating: ";
-        std::cin >> bike_info[11];
-    } while (isFloatNumber(bike_info[11]));
-
-    // List or unlist
-    char ans;
-    do {
-        std::cout << "List motorbike for rent (Y/N)? " << std::endl;
-        std::cin >> ans;
-    } while (tolower(ans) != 'y' && tolower(ans) != 'n');
-    if (ans == 'Y' || ans == 'y'){ bike_info[12] = "1";
-    } else if (ans == 'N' || ans == 'n'){ bike_info[12] = "0";
-    }
-
-    // Availability
-    bike_info[13] = "1";    // available
-
-    // set bike info
-    newbike.setNewMotorbikeInfo(bike_info);
     return 0;
 }
-//------------------------------------------------------------------------------------------------// 
-
 // ---------------------------Non-Member Functions------------------------------------------------//
 int System::viewAllMotorbike(){
     std::cout << "+==============================================+" << std::endl;
@@ -412,7 +262,7 @@ int System::signup(){
     Motorbike *newbike = new Motorbike();
     if (ans == 'Y' || ans == 'y'){
         // add new bike
-        bikeSignup(*newbike);
+        bikeSignup();
     } else if (ans == 'N' || ans == 'n'){
         std::cout << "Sign up successfully!" << std::endl;
     }
@@ -428,84 +278,144 @@ int System::signup(){
 
     return 0;
 }
-// -----------------------------------------------------------------------------------------------//
 
-// --------------------------- Main Menu -----------------------------------------------------------//
-int System::mainMenu(){
+//---------------------------Member Functions-----------------------------------------------------//
+int System::memberLogin(){
     std::cout << "+==============================================+" << std::endl;
-    std::cout << "|                  Main Menu                   |" << std::endl;
+    std::cout << "|                  Member Login                |" << std::endl;
     std::cout << "+==============================================+" << std::endl;
-    std::cout << "1. Member Login" << std::endl;
-    std::cout << "2. Admin Login" << std::endl;
-    std::cout << "3. Sign up" << std::endl;
-    std::cout << "4. View Motorbike" << std::endl;
-    std::cout << "5. Exit" << std::endl;
-
-    int choice = choiceInRange(1, 5);
-    while (choice != 5){
-        switch (choice){
-            case 1:
-                memberLogin() ? memberMenu() : mainMenu();
-                break;
-            case 2:
-                adminLogin();
-                break;
-            case 3:
-                signup();
-                break;
-            case 4:
-                viewAllMotorbike();
-                break;
-            case 5:
-                std::cout << "Thank you and goodbye!" << std::endl;
-                break;  
+    std::cin.ignore();
+    std::string username_ip, passwork_ip;
+    std::cout << "Username: ";
+    std::getline(std::cin, username_ip);
+    std::cout << "Password: ";
+    std::getline(std::cin, passwork_ip);
+    
+    for (auto mem : member_list){
+        if (mem->memberLogin(username_ip, passwork_ip) == true){
+            std::cout << "Login Successfully" << std::endl;
+            current_member = mem;
+            break;
         }
     }
-    return 0;
-}
-
-// --------------------------- Admin Menu ---------------------------------------------------------//
-int System::adminLogin(){
-    std::string admin_username, admin_pwd;
-    std::cout << "+==============================================+" << std::endl;
-    std::cout << "|                  Admin Login                 |" << std::endl;
-    std::cout << "+==============================================+" << std::endl;
-    std::cout << "Admin Username: ";
-    std::cin >> admin_username;
-    std::cout << "Admin Password: ";
-    std::cin >> admin_pwd;
-
-    if (admin->adminLogin(admin_username, admin_pwd)){
-        adminMenu();
-    } else {
-        std::cout << "Login failed!" << std::endl;
-        mainMenu();
+    // check for bike that own and bike that currently rentinng (check by date)
+    bool ownbike_flag = false;
+    bool rentbike_flag = false;
+    if (current_member != nullptr){
+        for (auto bike : motorbike_list){
+            if (current_member->getMemberInfo()[10] == bike->getMotorbikeID()){
+                current_member->setOwnedBike(bike);
+                ownbike_flag = true;
+            } 
+            
+            if (current_member->getMemberInfo()[11] == bike->getMotorbikeID()){     //check for the id saved in rentbikeID
+                current_member->setRentedBike(bike);
+                rentbike_flag = true;
+            } 
+        }
+        if (!ownbike_flag){
+            current_member->setOwnedBike(nullptr);
+        }
+        if (!rentbike_flag){
+            current_member->setRentedBike(nullptr);
+        }
+        std::cout << "Login Successfully" << std::endl;
+        return true;
     }
-    return 0;
+    std::cout << "Wrong Username or Password. Login Failed!" << std::endl;
+    return false; 
 }
-int System::adminMenu(){
-    std::cout << "+==============================================+" << std::endl;
-    std::cout << "|               Administrator Menu             |" << std::endl;
-    std::cout << "+==============================================+" << std::endl;
-    std::cout << "1. View All Member" << std::endl;
-    std::cout << "2. View All Motorbike" << std::endl;
-    std::cout << "3. Logout" << std::endl;
+int System::bikeSignup(){
 
-    int choice = choiceInRange(1, 3);
+    std::vector<std::string> bike_info;
+    // ID
+    bike_info[0] = randomIDs("motorbike");
     
-    switch (choice){
-        case 1:
-            admin->viewMember(*this);
-            break;
-        case 2:
-            admin->viewMotorbike(*this);
-            break;
-        case 3:
-            // logout();
-            break;
-    }
-}
+    // Model
+    std::cout << "Enter Motorbike model: ";
+    std::getline(std::cin, bike_info[1]);
 
+    // Color
+    do {
+        std::cout << "Enter color: ";
+        std::getline(std::cin, bike_info[2]);
+    } while (isLetter(bike_info[2]));
+    
+    // Engine size
+    do {
+        std::cout << "Enter engine size in cubic centermeter (cc): ";
+        std::cin >> bike_info[3];
+    } while (isNumber(bike_info[3]));
+    
+    // Transmission mode
+    int choice = 0;
+    do {
+        std::cout << "Enter transmission mode: ";
+        std::cout << "1. Manual" << std::endl;
+        std::cout << "2. Automatic" << std::endl;    
+    } while (choiceInRange(1,2));
+    if (choice == 1) { bike_info[4] = "Manual"; }
+    else if (choice == 2) { bike_info[4] = "Automatic"; }
+    
+    // Year made
+    do {
+        std::cout << "Enter year made: ";   
+        std::cin >> bike_info[5];
+    } while (isNumber(bike_info[5]));
+    
+    std::cin.ignore();
+    
+    // Description
+    std::cout << "Enter description: ";
+    std::getline(std::cin, bike_info[6]);
+    
+    // Location
+    do {    
+        std::cout << "Available location: " << std::endl;
+        std::cout << "1. Hanoi (HN)" << std::endl;
+        std::cout << "2. Ho Chi Minh (HCM)" << std::endl;
+    } while (choiceInRange(1, 2));
+    if (choice == 1) { bike_info[7] = "HN"; }
+    else if (choice == 2) { bike_info[7] = "HCM"; }
+    
+    // Rent cost
+    do {
+        std::cout << "Enter rent cost: ";
+        std::cin >> bike_info[8];
+    } while (isNumber(bike_info[8]));
+
+    bike_info[9] = "";  // start date
+    bike_info[10] = ""; // end date
+    
+    // Minimum member rating
+    do {
+        std::cout << "Enter minimum member rating: ";
+        std::cin >> bike_info[11];
+    } while (isFloatNumber(bike_info[11]));
+
+    // List or unlist
+    char ans;    
+    do {
+        std::cout << "List motorbike for rent (Y/N)? " << std::endl;
+        std::cin >> ans;
+    } while (tolower(ans) != 'y' && tolower(ans) != 'n');
+    if (ans == 'Y' || ans == 'y'){ bike_info[12] = "1";
+    } else if (ans == 'N' || ans == 'n'){ bike_info[12] = "0";
+    }
+
+    // Availability
+    bike_info[13] = "1";    // available
+
+    // add new bike to the list
+    Motorbike *newbike = new Motorbike(bike_info[0], bike_info[1], bike_info[2], std::stoi(bike_info[3]),
+                                    bike_info[4], std::stoi(bike_info[5]), bike_info[6], bike_info[7],
+                                    std::stoi(bike_info[8]), bike_info[9], bike_info[10], std::stof(bike_info[11]),
+                                    std::stoi(bike_info[12]), std::stoi(bike_info[13]), "");
+    motorbike_list.push_back(newbike);
+
+    std::cout << "Add new bike successfully!" << std::endl;
+    return 0;
+}
 //---------------------------- Member Menu ------------------------------------------------------//
 int System::memberMenu(){
     std::cout << "+==============================================+" << std::endl;
@@ -553,7 +463,6 @@ int System::memberMenu(){
     }
     return 0;   
 }
-
 int System::rentMotorbikeMenu(){
     std::cout << "+==============================================+" << std::endl;
     std::cout << "|              Rent Motorbike Menu             |" << std::endl;
@@ -654,6 +563,91 @@ int System::rentMotorbikeMenu(){
     return 0;
 }
 
+// ---------------------------File Handling Functions---------------------------------------------//
+// Load data from txt files
+int System::loadMember(){
+    member_list.clear();
+
+    std::ifstream file;
+    file.open(MEMBER_FILE, std::fstream::in);
+    if (!file.is_open()){
+        std::cerr << "Error: Could not open Member.txt file" << std::endl;
+        return 1;
+    }
+    std::string line;
+    while(std::getline(file, line)){
+        std::vector<std::string> data;  // store substring of line
+        
+        data = splitString (line, '|');
+        
+        Member *member = new Member(data[0], data[1], data[2], 
+                                    data[3], data[4], 
+                                    std::stoi(data[5]), data[6], 
+                                    data[7], data[8], 
+                                    std::stoi(data[9]), 
+                                    data[10], data[11], 
+                                    std::stof(data[12]));
+        member_list.push_back(member);
+    }
+    file.close();
+   
+    return 0;
+}
+int System::loadMotorbike(){
+    motorbike_list.clear();
+    std::ifstream file;
+    file.open(MOTORBIKE_FILE, std::fstream::in);
+    
+    if (!file.is_open()){
+        std::cerr << "Error: Could not open Motorbike.txt file" <<std::endl;
+        return 1;
+    }
+    std::string line;
+    while (std::getline(file,line)){
+        std::vector<std::string> data;
+        data = splitString(line, '|');
+        Motorbike *bike = new Motorbike (data[0], data[1], data[2], std::stoi(data[3]), 
+                                        data[4], std::stoi(data[5]), data[6], data[7], 
+                                        std::stoi(data[8]), data[9], data[10], 
+                                        std::stof(data[11]), std::stoi(data[12]), std::stoi(data[13]), data[14]);
+        motorbike_list.push_back(bike);
+    }
+    file.close();
+    return 0;
+}
+// Save data to txt files
+int System::saveMember(){
+    std::ofstream file;
+    file.open(MEMBER_FILE, std::fstream::out);
+    if (!file.is_open()){
+        std::cerr << "Error: Could not open file" << std::endl;
+        return 1;
+    }
+
+    for (auto mem : member_list){
+        std::vector<std::string> data = mem->getMemberInfo();
+        file << mem->getUsername() << '|' << mem->getPassword() << '|' << data[2] << '|'
+             << data[3] << '|' << data[4] << '|' << data[5] << '|'
+             << data[6] << '|' << data[7] << '|' << data[8] << std::endl;
+    }
+    return 0;
+}
+int System::saveMotorbike(){
+    std::ofstream file;
+    file.open(MOTORBIKE_FILE, std::fstream::out);
+    if (!file.is_open()){
+        std::cerr << "Error: Could not open file" << std::endl;
+        return 1;
+    }
+    for(auto bike : motorbike_list){
+        std::vector<std::string> data = bike->getMotorbikeInfo();
+        file << data[0] << '|' << data[1] << '|' << data[2] << '|' << data[3] << '|' 
+             << data[4] << '|' << data[5] << '|' << data[6] << '|' << data[7] << '|' 
+             << data[8] << '|' << data[9] << '|' << data[10] << '|' << data[11] << '|' 
+             << data[12] << '|' << data[13] << std::endl;
+    }
+    return 0;
+}
 
 int System::logout(){
     saveMember();

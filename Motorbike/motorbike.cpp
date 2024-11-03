@@ -182,3 +182,15 @@ int Motorbike::logout(){
     return 0;
 
 }
+float Motorbike::calcMotorbikeRating(){
+    float total_rating = 0;
+    int count = 0;
+    for(auto review:motorbikeReview){
+        std::vector<std::string> rev_data = review->getMotorbikeReviewInfo();
+        if (rev_data[2] == this->getMotorbikeID() && rev_data[3] == "Complete"){
+            total_rating += std::stof(rev_data[4]);
+            count++;
+        }
+    }
+    return total_rating/count;
+}  

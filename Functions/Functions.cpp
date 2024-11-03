@@ -12,10 +12,10 @@ std::string randomIDs (std::string type){
     else if (type == "request"){
         id = "R-R" + std::to_string(rand() % 1000);
     }
-    else if (type == "memreview"){
+    else if (type == "memReview"){
         id = "M-R" + std::to_string(rand() % 1000);
     }
-    else if (type == "bikereview"){
+    else if (type == "bikeReview"){
         id = "B-R" + std::to_string(rand() % 1000);
     }
     return id;
@@ -153,7 +153,7 @@ char returnYesNo(){ //only accept Y
             std::cin.clear();
             std::cin.ignore();
         }
-    } while (tolower(c) != 'y');
+    } while (tolower(c) != 'y' && tolower(c) != 'n');
     
     return c;
 }

@@ -20,9 +20,6 @@ class MotorbikeReview: public Review {
                         std::string rentedMotorbikeID_ip, std::string motorbikeReviewStatus_ip, 
                         float rating_ip, std::string comment_ip);
         std::vector<std::string> getMotorbikeReviewInfo();
-
-        float calMotorbikeRating();
-        
 };
 
 #endif

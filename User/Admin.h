@@ -3,18 +3,19 @@
 
 #include "User.h" 
 #include "../System/System.h"
-const int colWidth[] = {5, 10, 15, 20};       //0-13 
 class System;
 class Admin : public User {
     public:
+        // Default constructor
         Admin();
+        // Parameterized constructor
         Admin(std::string username_ip, std::string password_ip);
-
+        // Admin login
         bool adminLogin(std::string username, std::string pwd);
-
+        // View all members
         int viewMember(System &sys);
+        // View all motorbikes
         int viewMotorbike(System &sys);
 };
 
 #endif
-

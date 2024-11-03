@@ -1,16 +1,20 @@
 #include "Admin.h"
 
+// Default constructor
 Admin::Admin():User("admin", "nhatn123"){};
+
+// Parameterized constructor
 Admin::Admin(std::string username_ip, std::string password_ip)
             :User(username_ip, password_ip){};
 
+// Admin login
 bool Admin::adminLogin(std::string usename, std::string pwd){
     if ((usename == this->getUsername()) && (pwd == this->getPassword())){
         return true;
     }
     return false;
 }
-
+// View all members
 int Admin::viewMember(System &sys){
     std::vector<Member*> member_list = sys.getMemberList();
     int count = 1;
@@ -57,6 +61,7 @@ int Admin::viewMember(System &sys){
     } 
     return 0; 
 }
+// View all motorbikes
 int Admin::viewMotorbike(System &sys){
     std::vector<Motorbike*> motorbike_list = sys.getMotorbikeList();
     int count = 1;
