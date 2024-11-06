@@ -36,8 +36,8 @@ Member::Member(std::string memberID_ip, std::string username_ip, std::string pas
                credit(credit_ip), 
                ownedbikeID(ownedbikeID_ip), rentingbikeID(rentedbikeID_ip),
                memberRating(memberRating_ip) {
-                // loadRequest();
-                // loadMemberReview();
+                loadRequest();
+                loadMemberReview();
                };
 
 // Destructor
@@ -61,10 +61,10 @@ std::string Member::getRentBikeID(){ return this->rentingbikeID; }
 std::string Member::getMemberID(){ return this->memberID; }
 std::vector<std::string> Member::getMemberInfo() {
     std::vector<std::string> member_info;
-
-    member_info.push_back(this->memberID);                      // 0    
-    member_info.push_back(this->getUsername());                 // 1
-    member_info.push_back(this->getPassword());                 // 2
+    std::string uname, pwd;
+    member_info.push_back(this->memberID);                      // 0
+    member_info.push_back(this->User::getUsername());           // 1
+    member_info.push_back(this->User::getPassword());           // 2
     member_info.push_back(this->fullname);                      // 3
     member_info.push_back(this->phonenumber);                   // 4
     member_info.push_back(std::to_string(this->id_type));       // 5
@@ -333,7 +333,6 @@ int Member::addCredits(){
 int Member::logout(){
     saveRequest();
     saveMemberReview();
-    std::cout << "Thank You and Goodbye!" << std::endl;
     return 0;
 }
 
@@ -347,34 +346,39 @@ int Member::loadRequest(){
         std::cerr << "1. Error opening file " << MEMBER_REQUEST_FILE << std::endl;
         return 1;
     }
-    // Read file
-    std::string line;
-    std::vector<std::string> request_info;
-    while (std::getline(file, line)){
-        if (line.empty()){
-            continue;
-        }
 
-        request_info.clear();   
-        request_info = splitString(line, '|');
-        // load request base on owner ID
-        Request *rqst = new Request();
-        if (request_info[2] == this->memberID) {    
-            // if (rqst->parseFromLine(line)) {
-            //     rentRequest.push_back(rqst);
-            // } else {
-            //     delete rqst;
+    if (isFileEmpty(MEMBER_REQUEST_FILE)){
+        file.close();
+        return 0;
+    } else {
+        // Read file
+        std::string line;
+        std::vector<std::string> request_info;
+        while (std::getline(file, line)){
+            // if (line.empty()){
+            //     continue;
             // }
-            
-            Request *new_request = new Request(request_info[0], request_info[1], 
-                                               request_info[2], request_info[3], 
-                                               request_info[4], request_info[5], 
-                                               std::stoi(request_info[6]), request_info[7]);
-            this->rentRequest.push_back(new_request);
-        }
-    }
-    file.close();
 
+            request_info.clear();   
+            request_info = splitString(line, '|');
+            // load request base on owner ID
+            if (request_info[2] == this->memberID) {    
+                // if (rqst->parseFromLine(line)) {
+                //     rentRequest.push_back(rqst);
+                // } else {
+                //     delete rqst;
+                // }
+                
+                Request *new_request = new Request(request_info[0], request_info[1], 
+                                                request_info[2], request_info[3], 
+                                                request_info[4], request_info[5], 
+                                                std::stoi(request_info[6]), request_info[7]);
+                this->rentRequest.push_back(new_request);
+            }
+        }
+        file.close();
+    }
+    
     return 0;
 }
 int Member::loadMemberReview(){
@@ -384,28 +388,33 @@ int Member::loadMemberReview(){
         std::cerr << "1. Error opening file " << MEMBER_REVIEW_FILE << std::endl;
         return 1;
     }
-    std::string line;
-    std::vector<std::string> review_info;
-    while (std::getline(file, line)){
-        if (line.empty()){
-            continue;
-        }
-        review_info.clear();
-        review_info = splitString(line, '|');
-        MemberReview *review = new MemberReview();
-        if (review_info[1] == this->memberID || review_info[2] == this->memberID){
-            // if (review->parseFromLine(line)){
-            //     memberReview.push_back(review);
-            // } else {
-            //     delete review;
+    if (isFileEmpty(MEMBER_REVIEW_FILE)){
+        file.close();
+        return 0;
+    } else {
+        std::string line;
+        std::vector<std::string> review_info;
+        while (std::getline(file, line)){
+            // if (line.empty()){
+            //     continue;
             // }
-            MemberReview *new_review = new MemberReview(review_info[0], review_info[1], 
-                                                        review_info[2], review_info[3],
-                                                        std::stof(review_info[4]), review_info[5]);
-            this->memberReview.push_back(new_review);
+            review_info.clear();
+            review_info = splitString(line, '|');
+            MemberReview *review = new MemberReview();
+            if (review_info[1] == this->memberID || review_info[2] == this->memberID){
+                // if (review->parseFromLine(line)){
+                //     memberReview.push_back(review);
+                // } else {
+                //     delete review;
+                // }
+                MemberReview *new_review = new MemberReview(review_info[0], review_info[1], 
+                                                            review_info[2], review_info[3],
+                                                            std::stof(review_info[4]), review_info[5]);
+                this->memberReview.push_back(new_review);
+            }
         }
+        file.close();
     }
-    file.close();
     return 0;
 }
 
@@ -430,6 +439,7 @@ int Member::saveRequest(){
         file << std::endl;
     }
     file.close();
+    std::cout << "Requests saved successfully!" << std::endl;
     return 0;
 }
 int Member::saveMemberReview(){
@@ -453,6 +463,7 @@ int Member::saveMemberReview(){
         file << std::endl;
     }
     file.close();
+    std::cout << "Member Review saved successfully!" << std::endl;
     return 0;
 }
 float Member::calcMemberRating(){
@@ -475,26 +486,27 @@ bool Member::parseFromLine(const std::string& line){
     try {
         std::getline(iss, memberID, '|');         // MemID
         std::getline(iss, username_ip, '|');      // username
+        this->setUsername(username_ip);
         std::getline(iss, pwd_ip, '|');           // password 
-        User(username_ip, pwd_ip);
+        this->setPassword(pwd_ip);
 
         std::getline(iss, fullname, '|');         // fullname
-        std::getline(iss, phonenumber, '|');         // phone number
+        std::getline(iss, phonenumber, '|');      // phone number
         
-        std::getline(iss, token, '|');          // id type
+        std::getline(iss, token, '|');            // id type
         id_type = std::stoi(token);
 
-        std::getline(iss, id_number, '|');          // ID number
-        std::getline(iss, drv_license, '|');          // drv_license
-        std::getline(iss, exp_date, '|');          // exp date
+        std::getline(iss, id_number, '|');        // ID number
+        std::getline(iss, drv_license, '|');      // drv_license
+        std::getline(iss, exp_date, '|');         // exp date
 
-        std::getline(iss, token, '|');          // credit
+        std::getline(iss, token, '|');            // credit
         credit = std::stoi(token);
 
-        std::getline(iss, ownedbikeID, '|');          // ownedbikeID
-        std::getline(iss, rentingbikeID, '|');          // rentingbikeID
+        std::getline(iss, ownedbikeID, '|');      // ownedbikeID
+        std::getline(iss, rentingbikeID, '|');    // rentingbikeID
         
-        std::getline(iss, token, '|');          // mem rating
+        std::getline(iss, token, '|');            // mem rating
         memberRating = std::stof(token);
 
 

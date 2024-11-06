@@ -11,8 +11,6 @@ int main(){
     System system;
     system.init();
     system.mainMenu();
-
-    // cout << "rent duration: " << rentDuration("02/11/2024", "01/11/2024")<< endl;
     return 0;
 }
 

@@ -30,5 +30,6 @@ int rentDuration(const std::string &startDate, const std::string &endDate);
 // string manipulation functions
 std::vector<std::string> splitString (std::string &str, char delimiter);
 
+// file check for empty
+bool isFileEmpty(const std::string &filename);
 #endif
-

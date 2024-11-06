@@ -191,3 +191,11 @@ int rentDuration(const std::string &startDateStr, const std::string &endDateStr)
     return daysDifference;
 }
 
+bool isFileEmpty(const std::string &filename){
+    std::ifstream file(filename, std::ios::ate); // Open file in "at end" mode
+    if (!file.is_open()) {
+        std::cerr << "Error: Could not open the file.\n";
+        return true; // Assume empty if unable to open
+    }
+    return file.tellg() == 0; // Check if the position is at the start (file is empty)
+}

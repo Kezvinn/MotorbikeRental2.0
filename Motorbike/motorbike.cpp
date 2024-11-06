@@ -64,7 +64,7 @@ Motorbike::Motorbike(std::string motorbikeID_ip,            // 0
                     is_listed(is_listed_ip), 
                     is_available(is_available_ip), 
                     renterID(renterID_ip) {
-                    // loadMotorbikeReview();
+                    loadMotorbikeReview();
                     }                           
 
 
@@ -80,7 +80,7 @@ int Motorbike::showMotorbikeInfo(){
     std::cout << std::setw(23) << "Year Made: "         << this->year_made << std::endl;
     std::cout << std::setw(23) << "Description: "       << this->desctiption << std::endl;
     std::cout << std::setw(23) << "Location: "          << this->location << std::endl;
-    std::cout << std::setw(23) << "Rent Cost: "         << this->rent_cost << "credits" << std::endl;
+    std::cout << std::setw(23) << "Rent Cost: "         << this->rent_cost << " credits" << std::endl;
     std::cout << std::setw(23) << "Start Date: "        << this->start_date << std::endl;
     std::cout << std::setw(23) << "End Date: "          << this->end_date  << std::endl;
     std::cout << std::setw(23) << "Minimum Member Rating: " << std::fixed << std::setprecision(2) << this->min_mem_rating << std::endl;
@@ -155,22 +155,27 @@ int Motorbike::loadMotorbikeReview(){
         std::cerr << "1. Error opening file " << MOTORBIKE_REVIEW_FILE << std::endl;
         return 1;
     }
-    std::string line;
-    std::vector<std::string> review_info;
-    while (std::getline(file, line)){
-        if (line.empty()){
-            continue;
+    if (isFileEmpty(MOTORBIKE_REVIEW_FILE)){
+        file.close();
+        return 0;
+    } else {
+        std::string line;
+        std::vector<std::string> review_info;
+        while (std::getline(file, line)){
+            // if (line.empty()){
+            //     continue;
+            // }
+            review_info.clear();
+            review_info = splitString(line, '|');
+            if (review_info[2] == this->motorbikeID){
+                MotorbikeReview *new_review = new MotorbikeReview(review_info[0], review_info[1], 
+                                                                review_info[2], review_info[3],
+                                                                std::stof(review_info[4]), review_info[5]);
+                this->motorbikeReview.push_back(new_review);
+            }
         }
-        review_info.clear();
-        review_info = splitString(line, '|');
-        if (review_info[2] == this->motorbikeID){
-            MotorbikeReview *new_review = new MotorbikeReview(review_info[0], review_info[1], 
-                                                              review_info[2], review_info[3],
-                                                              std::stof(review_info[4]), review_info[5]);
-            this->motorbikeReview.push_back(new_review);
-        }
+        file.close();
     }
-    file.close();
     return 0;
 }
 int Motorbike::saveMotorbikeReview(){
@@ -191,10 +196,12 @@ int Motorbike::saveMotorbikeReview(){
             if (i != data_size - 1){
                 file << "|";
             }
+            std::cout << "got here" << std::endl;
         }
         file << std::endl;
     }
     file.close();
+    std::cout << "Motorbike Review saved successfully!" << std::endl;
     return 0;
 }
 
