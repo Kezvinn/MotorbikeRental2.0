@@ -9,7 +9,7 @@
 #include "../Review/Member_review.h"
 
 #define MEMBER_REVIEW_FILE "Data/MemberReview.txt"
-#define MEMBER_REQUEST_FILE "Data/MemberRequest.txt"
+#define MEMBER_REQUEST_FILE "Data/Requests.txt"
 
 class Member: public User{
     private:
@@ -23,14 +23,15 @@ class Member: public User{
         std::string drv_license;                            // 7    12 digits
         std::string exp_date;                               // 8    
         int credit = 20;    // default credit               // 9 
-    // pointer to bike own and rent
-        Motorbike *ownedbike;   
-        Motorbike *rentedbike;
     // Motorbike ID -- owned and rented
         std::string ownedbikeID;                            // 10
         std::string rentingbikeID;                          // 11
+    // pointer to bike own and rent
+        Motorbike *ownedbike;   
+        Motorbike *rentedbike;
     // Rating
         float memberRating;                                 // 12
+    
     // Request and Reivew
         std::vector<Request*> rentRequest;
         std::vector<MemberReview*> memberReview; 
@@ -38,21 +39,32 @@ class Member: public User{
         // Default constructor
         Member(); 
         // Parameterized constructor - use this to create new member
-        Member(std::string username_ip, std::string password_ip,
-               std::string fullname_ip, std::string phonenumber_ip, 
-               bool id_type_ip, std::string id_number_ip, 
-               std::string drv_license_ip, std::string exp_date_ip, 
-               int credit_ip, 
-               std::string ownedbikeID_ip, std::string rentedbikeID_ip,
-               float memberRating_ip);
+        Member(std::string username_ip,             // 1              
+               std::string password_ip,             // 2
+               std::string fullname_ip,             // 3
+               std::string phonenumber_ip,          // 4 
+               bool id_type_ip,                     // 5
+               std::string id_number_ip,            // 6
+               std::string drv_license_ip,          // 7
+               std::string exp_date_ip,             // 8
+               int credit_ip,                       // 9
+               std::string ownedbikeID_ip,          // 10 
+               std::string rentedbikeID_ip,         // 11
+               float memberRating_ip);              // 12
         // Parameterized constructor - use this to load member from file    
-        Member(std::string memberID_ip, std::string username_ip, std::string password_ip,
-               std::string fullname_ip, std::string phonenumber_ip, 
-               bool id_type_ip, std::string id_number_ip, 
-               std::string drv_license_ip, std::string exp_date_ip, 
-               int credit_ip, 
-               std::string ownedbikeID_ip, std::string rentedbikeID_ip,
-               float memberRating_ip);
+        Member(std::string memberID_ip,             // 0
+               std::string username_ip,             // 1
+               std::string password_ip,             // 2
+               std::string fullname_ip,             // 3
+               std::string phonenumber_ip,          // 4
+               bool id_type_ip,                     // 5
+               std::string id_number_ip,            // 6
+               std::string drv_license_ip,          // 7
+               std::string exp_date_ip,             // 8
+               int credit_ip,                       // 9
+               std::string ownedbikeID_ip,          // 10
+               std::string rentedbikeID_ip,         // 11
+               float memberRating_ip);              // 12
         // Destructor
         ~Member();      
         // Member Login
@@ -100,6 +112,10 @@ class Member: public User{
 
         // calculate member rating
         float calcMemberRating(); 
+
+        // Error handling
+        bool parseFromLine(const std::string& line);
+
 };
 
 #endif

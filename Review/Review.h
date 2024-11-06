@@ -14,7 +14,8 @@ class Review {
         // Getter 
         float getRating();
         std::string getComment();
-
+        int setRating(float rating_i);
+        int setComment(std::string comment_i);
 
         int getReview();    //print out rating and comment
         

@@ -35,7 +35,10 @@ Member::Member(std::string memberID_ip, std::string username_ip, std::string pas
                drv_license(drv_license_ip), exp_date(exp_date_ip), 
                credit(credit_ip), 
                ownedbikeID(ownedbikeID_ip), rentingbikeID(rentedbikeID_ip),
-               memberRating(memberRating_ip) {};
+               memberRating(memberRating_ip) {
+                // loadRequest();
+                // loadMemberReview();
+               };
 
 // Destructor
 Member::~Member(){
@@ -56,7 +59,7 @@ Motorbike* Member::getRentedBike() const{ return this->rentedbike; }
 std::string Member::getOwnbikeID(){ return this->ownedbikeID; }
 std::string Member::getRentBikeID(){ return this->rentingbikeID; }
 std::string Member::getMemberID(){ return this->memberID; }
-std::vector<std::string> Member::getMemberInfo(){
+std::vector<std::string> Member::getMemberInfo() {
     std::vector<std::string> member_info;
 
     member_info.push_back(this->memberID);                      // 0    
@@ -124,9 +127,10 @@ int Member::rentRequestMenu(){
               << std::setw(15) << "End Date"  
               << std::setw(15) << "Rent Cost"   
               << std::setw(10) << "Status" <<  std::endl;
-            
+    std::vector<std::string> rqst_data;    
     for(auto rqst : this->rentRequest) {
-        std::vector <std::string> rqst_data = rqst->getRequestInfo();
+        rqst_data.clear();
+        rqst_data = rqst->getRequestInfo();
         if (rqst_data[2] == this->memberID && rqst_data[3] == this->ownedbikeID) {  
             std::cout << " " << count << "   ";
             std::cout << std::setw(15) << rqst_data[0]  // Request ID
@@ -151,18 +155,18 @@ int Member::rentRequestMenu(){
     } else {
         if (rentRequest[choice-1]->getRequestInfo()[7] == "Pending") {
             std::cout << "Action: " << std::endl;
-            std::cout << "1. Approve" << std::endl;
-            std::cout << "2. Deny" << std::endl;
+            std::cout << "1. Approve request." << std::endl;
+            std::cout << "2. Deny request." << std::endl;
             int action = choiceInRange(1, 2);
             if (action == 1){
                 rentRequest[choice-1]->getRequestInfo()[7] = "Approved";
                 std::cout << "Request Approved!" << std::endl;
-            } else {
+            } else if (action == 2){
                 rentRequest[choice-1]->getRequestInfo()[7] = "Denied";
                 std::cout << "Request Denied!" << std::endl;
             }
         } else {
-            std::cout << "Request already " << rentRequest[choice-1]->getRequestInfo()[7] << std::endl;
+            std::cout << "Request already " << rentRequest[choice-1]->getRequestInfo()[7] << "!" << std::endl;
             rentRequestMenu();
         }
     }
@@ -178,8 +182,10 @@ int Member::rateMotorbikeMenu(){
     int count = 1;
     // get bike view into vector based on the bike iD of the object
     std::vector<MotorbikeReview*> review = this->rentedbike->getMotorbikeReview();
+    std::vector<std::string> rev_data;
     for (auto rev : review){
-        std::vector<std::string> rev_data = rev->getMotorbikeReviewInfo();
+        rev_data.clear();
+        rev_data = rev->getMotorbikeReviewInfo();
         std::cout << "--------------------------------------------" << std::endl;
         std::cout << "No.       Review ID       Renter ID       Motorbike ID    Rating       Comment     Status" << std::endl;
         std::cout << count << "     " 
@@ -234,8 +240,10 @@ int Member::rateRenterMenu(){
     int count = 1;
     // get bike view into vector based on the bike iD of the object
     std::vector<MemberReview*> review = this->memberReview;
+    std::vector<std::string> rev_data;
     for (auto rev : review){
-        std::vector<std::string> rev_data = rev->getMemberReviewInfo();
+        rev_data.clear();
+        rev_data = rev->getMemberReviewInfo();
         std::cout << "--------------------------------------------" << std::endl;
         std::cout << "No.       Review ID       Reviewee ID       Rating       Comment     Status" << std::endl;
         std::cout << count << "     " 
@@ -336,14 +344,28 @@ int Member::loadRequest(){
     std::ifstream file;
     file.open(MEMBER_REQUEST_FILE, std::ios::in);
     if (!file.is_open()){
-        std::cerr << "Error opening file" << std::endl;
+        std::cerr << "1. Error opening file " << MEMBER_REQUEST_FILE << std::endl;
         return 1;
     }
     // Read file
     std::string line;
+    std::vector<std::string> request_info;
     while (std::getline(file, line)){
-        std::vector<std::string> request_info = splitString(line, '|');
-        if (request_info[0] == this->memberID) {
+        if (line.empty()){
+            continue;
+        }
+
+        request_info.clear();   
+        request_info = splitString(line, '|');
+        // load request base on owner ID
+        Request *rqst = new Request();
+        if (request_info[2] == this->memberID) {    
+            // if (rqst->parseFromLine(line)) {
+            //     rentRequest.push_back(rqst);
+            // } else {
+            //     delete rqst;
+            // }
+            
             Request *new_request = new Request(request_info[0], request_info[1], 
                                                request_info[2], request_info[3], 
                                                request_info[4], request_info[5], 
@@ -359,13 +381,24 @@ int Member::loadMemberReview(){
     std::ifstream file;
     file.open(MEMBER_REVIEW_FILE, std::ios::in);
     if (!file.is_open()){
-        std::cerr << "Error opening file" << std::endl;
+        std::cerr << "1. Error opening file " << MEMBER_REVIEW_FILE << std::endl;
         return 1;
     }
     std::string line;
+    std::vector<std::string> review_info;
     while (std::getline(file, line)){
-        std::vector<std::string> review_info = splitString(line, '|');
-        if (review_info[0] == this->memberID){
+        if (line.empty()){
+            continue;
+        }
+        review_info.clear();
+        review_info = splitString(line, '|');
+        MemberReview *review = new MemberReview();
+        if (review_info[1] == this->memberID || review_info[2] == this->memberID){
+            // if (review->parseFromLine(line)){
+            //     memberReview.push_back(review);
+            // } else {
+            //     delete review;
+            // }
             MemberReview *new_review = new MemberReview(review_info[0], review_info[1], 
                                                         review_info[2], review_info[3],
                                                         std::stof(review_info[4]), review_info[5]);
@@ -380,11 +413,13 @@ int Member::saveRequest(){
     std::ofstream file;
     file.open(MEMBER_REQUEST_FILE, std::ios::app);
     if (!file.is_open()){
-        std::cerr << "Error opening file" << std::endl;
+        std::cerr << "2. Error opening file " << MEMBER_REQUEST_FILE << std::endl;
         return 1;
     }
-    for (Request *request: this->rentRequest){
-        std::vector<std::string> request_info = request->getRequestInfo();
+    std::vector<std::string> request_info;
+    for (Request *request: this->rentRequest) {
+        request_info.clear();
+        request_info = request->getRequestInfo();
         int data_size = request_info.size();
         for (int i = 0; i < data_size; i++){
             file << request_info[i];
@@ -401,11 +436,13 @@ int Member::saveMemberReview(){
     std::ofstream file;
     file.open(MEMBER_REVIEW_FILE, std::ios::app);
     if (!file.is_open()){
-        std::cerr << "Error opening file" << std::endl;
+        std::cerr << "2. Error opening file " << MEMBER_REVIEW_FILE << std::endl;
         return 1;
     }
+    std::vector<std::string> review_info;
     for (MemberReview *review: this->memberReview){
-        std::vector<std::string> review_info = review->getMemberReviewInfo();
+        review_info.clear();
+        review_info = review->getMemberReviewInfo();
         int data_size = review_info.size();
         for (int i = 0; i < data_size; i++){
             file << review_info[i];
@@ -429,4 +466,42 @@ float Member::calcMemberRating(){
         }
     }
     return total_rating/count;
+}
+
+bool Member::parseFromLine(const std::string& line){
+    std::istringstream iss(line);
+    std::string token;
+    std::string username_ip, pwd_ip;
+    try {
+        std::getline(iss, memberID, '|');         // MemID
+        std::getline(iss, username_ip, '|');      // username
+        std::getline(iss, pwd_ip, '|');           // password 
+        User(username_ip, pwd_ip);
+
+        std::getline(iss, fullname, '|');         // fullname
+        std::getline(iss, phonenumber, '|');         // phone number
+        
+        std::getline(iss, token, '|');          // id type
+        id_type = std::stoi(token);
+
+        std::getline(iss, id_number, '|');          // ID number
+        std::getline(iss, drv_license, '|');          // drv_license
+        std::getline(iss, exp_date, '|');          // exp date
+
+        std::getline(iss, token, '|');          // credit
+        credit = std::stoi(token);
+
+        std::getline(iss, ownedbikeID, '|');          // ownedbikeID
+        std::getline(iss, rentingbikeID, '|');          // rentingbikeID
+        
+        std::getline(iss, token, '|');          // mem rating
+        memberRating = std::stof(token);
+
+
+    } catch (const std::exception& e) {
+        std::cerr << "Error parsing line: " << line << "\nException: " << e.what() << std::endl;
+        return false;
+    }
+
+    return true;
 }

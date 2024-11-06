@@ -10,13 +10,13 @@ std::string randomIDs (std::string type){
         id = "B" + std::to_string(rand() % 1000);
     }
     else if (type == "request"){
-        id = "R-R" + std::to_string(rand() % 1000);
+        id = "RQ" + std::to_string(rand() % 1000);
     }
     else if (type == "memReview"){
-        id = "M-R" + std::to_string(rand() % 1000);
+        id = "MR" + std::to_string(rand() % 1000);
     }
     else if (type == "bikeReview"){
-        id = "B-R" + std::to_string(rand() % 1000);
+        id = "BR" + std::to_string(rand() % 1000);
     }
     return id;
 }

@@ -50,7 +50,7 @@ int Admin::viewMember(System &sys){
                   << std::setw(10) << data[9]           // credit
                   << std::setw(15) << data[10]          // owned bike ID
                   << std::setw(13) << data[11]          // rent bike ID
-                  << std::setw(8) << std::fixed <<std::setprecision (2) << std::stof(data[12])           // rating
+                  << std::setw(8) << std::fixed << std::setprecision (2) << std::stof(data[12])           // rating
                   << std::endl;
         count++;
     }   
@@ -80,6 +80,7 @@ int Admin::viewMotorbike(System &sys){
               << std::setw(15) << "Min Rating"
               << std::setw(10) << "Listed"
               << std::setw(16) << "Availability"
+              << std::setw(16) << "Renter ID"
               << std::setw(15) << "Description" 
               << std::endl;
     std::cout << std::string(210, '-') << std::endl;
@@ -98,8 +99,9 @@ int Admin::viewMotorbike(System &sys){
                   << std::setw(15) << data[9]    // start date
                   << std::setw(15) << data[10]   // end date
                   << std::setw(15) << std::fixed << std::setprecision(2) << std::stof(data[11])   // min rating
-                  << std::setw(10) << (std::stoi(data[12])? "Listed":"Unlist")    // listed
-                  << std::setw(16) << (std::stoi(data[13])? "Available":"Unavailable")    // availability
+                  << std::setw(10) << (std::stoi(data[12])? "Listed":"Unlist")          // listed
+                  << std::setw(16) << (std::stoi(data[13])? "Available":"Unavailable")  // availability
+                  << std::setw(16) << data[14]
                   << std::setw(15) << data[6]    // description
                   << std::endl;
         count++;

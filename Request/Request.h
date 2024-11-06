@@ -18,12 +18,20 @@ class Request {
         std::string requestStatus;  // Pending/Approved/Rejected    // 7
     public:
         Request();
+        // Parameterized constructor - use this for creating new request
+        Request(std::string renterID_ip, 
+                std::string ownerID_ip, std::string motorbikeID_ip, 
+                std::string start_date_ip, std::string end_date_ip, 
+                int total_rent_cost_ip, std::string requestStatus_ip);
+        // Parameterized constructor - use this to load request from file
         Request(std::string requestID_ip, std::string renterID_ip, 
                 std::string ownerID_ip, std::string motorbikeID_ip, 
                 std::string start_date_ip, std::string end_date_ip, 
                 int total_rent_cost_ip, std::string requestStatus_ip);
+
         std::vector<std::string> getRequestInfo();
         int showRequestInfo();
+        bool parseFromLine(const std::string& line);
 };
 
 

@@ -15,7 +15,7 @@
 
 #include "../Request/request.h"
 
-#define TODAY_DATE "01/11/2024"
+#define TODAY_DATE "04/11/2024"
 
 #define MEMBER_FILE "Data/Member.txt"
 #define MOTORBIKE_FILE "Data/Motorbike.txt"
@@ -37,8 +37,8 @@ class System {
         System();
     // Destructor
         ~System();
-
-    int init();
+    // Init function - update Info of request and rent status
+        int init();
 
     // Getter to serve the Admin class
         std::vector<Member*> &getMemberList();
@@ -55,7 +55,7 @@ class System {
         
     // Member Menu
         int memberLogin();
-        int bikeSignup();
+        Motorbike* bikeSignup();
         int memberMenu();       // have all the function for member (in Member class)
         int rentMotorbikeMenu();
     
