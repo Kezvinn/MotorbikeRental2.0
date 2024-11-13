@@ -144,10 +144,10 @@ int choiceInRange(int min, int max){
     return choice;
 }
 
-char returnYesNo(){ //only accept Y
+char returnYesNo(){ 
     char c; 
     do {
-        std::cout << "Return (Y/N): ";
+        std::cout << "Enter your answer (Y/N): ";
         std::cin >> c;
         if (std::cin.fail()){
             std::cin.clear();
@@ -157,6 +157,20 @@ char returnYesNo(){ //only accept Y
     
     return c;
 }
+char returnYes(){ // only accept Y
+    char c; 
+    do {
+        std::cout << "Enter your answer (Y/N): ";
+        std::cin >> c;
+        if (std::cin.fail()){
+            std::cin.clear();
+            std::cin.ignore();
+        }
+    } while (tolower(c) != 'y');
+    
+    return c;
+}
+
 // Functions to calculate the duration by the different of date
 tm parseDate(const std::string & dateStr){
     struct tm date = {0};
@@ -199,3 +213,32 @@ bool isFileEmpty(const std::string &filename){
     }
     return file.tellg() == 0; // Check if the position is at the start (file is empty)
 }
+// std::vector<std::string> readFile(const std::string &filename){
+//     std::ifstream file;
+//     file.open(filename, std::ios::in);
+//     if (!file.is_open()){
+//         std::cerr << "Error opening file " << filename << std::endl;
+        
+//     }
+//     std::vector<std::string> data;
+//     std::vector<std::string> matrix;
+//     std::string line;
+    
+//     int cols = 8;
+//     int rows = 0;
+//     while (std::getline(file, line)){
+//         data = splitString(line, '|');
+//         matrix.insert(matrix.end(), data.begin(), data.end());
+//         rows++;
+//     }
+//     // std::cout << "rows = " << rows << std::endl;
+//     // for (int row = 0; row < rows; ++row){
+//     //     for (int col = 0; col < cols; ++col){
+//     //         std::cout << matrix[row * cols + col] << " ";
+//     //     }
+//     //     std::cout << std::endl;
+//     // }
+//     // std::cout << "DOne" << std::endl;
+
+//     return matrix;
+// }

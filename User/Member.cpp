@@ -36,8 +36,6 @@ Member::Member(std::string memberID_ip, std::string username_ip, std::string pas
                credit(credit_ip), 
                ownedbikeID(ownedbikeID_ip), rentingbikeID(rentedbikeID_ip),
                memberRating(memberRating_ip) {
-                loadRequest();
-                loadMemberReview();
                };
 
 // Destructor
@@ -52,7 +50,11 @@ bool Member::memberLogin(std::string &username_ip, std::string &pwd_ip){
     }
     return false;
 }
-
+int Member::init(){
+    loadRequest();
+    loadMemberReview();
+    return 0;
+}
 // Getter 
 Motorbike* Member::getOwnedBike() const{ return this->ownedbike; }
 Motorbike* Member::getRentedBike() const{ return this->rentedbike; }
@@ -84,7 +86,7 @@ int Member::setOwnedBike(Motorbike *bike){ this->ownedbike = bike; return 0; }
 int Member::setRentedBike(Motorbike *bike){ this->rentedbike = bike; return 0; }
 int Member::setOwnbikeID(std::string bikeID){ this->ownedbikeID = bikeID; return 0; }            
 int Member::setRentBikeID(std::string bikeID){ this->rentingbikeID = bikeID; return 0; }
-
+int Member::setMemberRating(float rating){ this->memberRating = rating; return 0; }
 int Member::addRentRequest(Request *newRequest){ this->rentRequest.push_back(newRequest); return 0; }
 int Member::addMemberReview(MemberReview *newReview){ this->memberReview.push_back(newReview); return 0; }
 
@@ -109,16 +111,23 @@ void Member::showMemberInfo(){
     std::cout << std::setw(18) << "Rented bike ID: "    << this->rentingbikeID << std::endl;
     std::cout << std::setw(18) << "Member rating: "     << std::fixed << std::setprecision(2) << this->memberRating << std::endl;
     std::cout << std::string(30, '-') << std::endl;
+    
 }
-
 int Member::rentRequestMenu(){
     // view all request based on the this member ID
     std::cout << "+==========================================+" << std::endl;
     std::cout << "|              Request Menu                |" << std::endl;
     std::cout << "+==========================================+" << std::endl;
+    std::cout << "1. View Past Requests" << std::endl;
+    std::cout << "2. View Pending Requests" << std::endl;
+    std::cout << "3. Return" << std::endl;
+    int choice_1 = choiceInRange(1, 3);
+    
     int count = 1;
-    std::cout << std::string(130, '-') << std::endl;
-    std::cout << "No. "   
+    int count_1 = 1;
+    std::cout << std::string(125, '-') << std::endl;
+    std::cout << std::left;
+    std::cout << std::setw(10) << "No. "   
               << std::setw(15) << "Request ID"
               << std::setw(15) << "Renter ID"   
               << std::setw(15) << "Owner ID"     
@@ -127,48 +136,94 @@ int Member::rentRequestMenu(){
               << std::setw(15) << "End Date"  
               << std::setw(15) << "Rent Cost"   
               << std::setw(10) << "Status" <<  std::endl;
-    std::vector<std::string> rqst_data;    
-    for(auto rqst : this->rentRequest) {
-        rqst_data.clear();
-        rqst_data = rqst->getRequestInfo();
-        if (rqst_data[2] == this->memberID && rqst_data[3] == this->ownedbikeID) {  
-            std::cout << " " << count << "   ";
-            std::cout << std::setw(15) << rqst_data[0]  // Request ID
-                      << std::setw(15) << rqst_data[1]  // Renter ID
-                      << std::setw(15) << rqst_data[2]  // Owner ID
-                      << std::setw(15) << rqst_data[3]  // Motorbike ID
-                      << std::setw(15) << rqst_data[4]  // Start Date
-                      << std::setw(15) << rqst_data[5]  // End Date
-                      << std::setw(15) << rqst_data[6]  // Rent Cost
-                      << std::setw(10) << rqst_data[7]  // Status
-                      << std::endl;
-            std::cout << std::string(130,'-') << std::endl;
-            count++;
+    
+    std::vector<std::string> rqst_data;
+// past request 
+    if (choice_1 == 1) {
+        for(auto rqst : this->rentRequest) {
+            rqst_data.clear();
+            rqst_data = rqst->getRequestInfo();
+            if (rqst_data[2] == this->memberID 
+                && rqst_data[3] == this->ownedbikeID
+                && rqst_data[7] != "Pending") {  
+                std::cout << std::left;
+                std::cout << count << "." <<std::string(10,' ');
+                std::cout << std::setw(15) << rqst_data[0]  // Request ID
+                        << std::setw(15) << rqst_data[1]  // Renter ID
+                        << std::setw(16) << rqst_data[2]  // Owner ID
+                        << std::setw(12) << rqst_data[3]  // Motorbike ID
+                        << std::setw(15) << rqst_data[4]  // Start Date
+                        << std::setw(18) << rqst_data[5]  // End Date
+                        << std::setw(12) << rqst_data[6]  // Rent Cost
+                        << std::setw(10) << rqst_data[7]  // Status
+                        << std::endl;
+                count++;
+            }
+        }
+        std::cout << std::string(125,'-') << std::endl;
+        if (count - 1 == 0){
+            std::cout << "No request available!" << std::endl;
+            return 0;
+        }
+        std::cout << "Return to Member Menu? (Y/N): " << std::endl;
+        char rtn = returnYes();
+        if (rtn == 'Y' || rtn == 'y'){
+            return 0;
         }
     }
-    // Member can choose which request to approvel and denied then return back to 
-    int choice = choiceInRange(0, count-1);
-    std::cout << "0. Return" << std::endl;
-    std::cout << "1 - " << count-1 << ". Approve/Deny the request" << std::endl;
-    if (choice == 0) {
-        return 0;
-    } else {
-        if (rentRequest[choice-1]->getRequestInfo()[7] == "Pending") {
-            std::cout << "Action: " << std::endl;
-            std::cout << "1. Approve request." << std::endl;
-            std::cout << "2. Deny request." << std::endl;
-            int action = choiceInRange(1, 2);
-            if (action == 1){
-                rentRequest[choice-1]->getRequestInfo()[7] = "Approved";
-                std::cout << "Request Approved!" << std::endl;
-            } else if (action == 2){
-                rentRequest[choice-1]->getRequestInfo()[7] = "Denied";
-                std::cout << "Request Denied!" << std::endl;
+// current pending request 
+    else if (choice_1 == 2) {  // current pending request
+        for(auto rqst : this->rentRequest) {
+            rqst_data.clear();
+            rqst_data = rqst->getRequestInfo();
+            if (rqst_data[2] == this->memberID 
+                && rqst_data[3] == this->ownedbikeID
+                && rqst_data[7] == "Pending") {  
+                std::cout << std::left;
+                std::cout << count_1 << "." <<std::string(10,' ');
+                std::cout << std::setw(15) << rqst_data[0]  // Request ID
+                        << std::setw(15) << rqst_data[1]  // Renter ID
+                        << std::setw(16) << rqst_data[2]  // Owner ID
+                        << std::setw(12) << rqst_data[3]  // Motorbike ID
+                        << std::setw(15) << rqst_data[4]  // Start Date
+                        << std::setw(18) << rqst_data[5]  // End Date
+                        << std::setw(12) << rqst_data[6]  // Rent Cost
+                        << std::setw(10) << rqst_data[7]  // Status
+                        << std::endl;
+                count_1++;
             }
-        } else {
-            std::cout << "Request already " << rentRequest[choice-1]->getRequestInfo()[7] << "!" << std::endl;
-            rentRequestMenu();
         }
+        std::cout << std::string(125,'-') << std::endl;
+        if (count_1 - 1 == 0){
+            std::cout << "No request available!" << std::endl;
+            return 0;
+        }
+        // Member can choose which request to approvel and denied then return back to 
+        std::cout << "Choose request to approve/deny: " << std::endl;
+        std::cout << "0. Return" << std::endl;
+        std::cout << "1 - " << count_1 - 1 << ". Approve/Deny the request" << std::endl;
+        int choice = choiceInRange(0, count_1-1);
+        if (choice == 0) {
+            return 0;
+        } else {
+            if (rentRequest[choice]->getRequestInfo()[7] == "Pending") {
+                std::cout << "Action: " << std::endl;
+                std::cout << "1. Approve request." << std::endl;
+                std::cout << "2. Deny request." << std::endl;
+                int action = choiceInRange(1, 2);
+                if (action == 1){
+                    rentRequest[choice]->setRqstStt("Approved");
+                    std::cout << rentRequest[choice-1]->getRequestInfo()[7] << std::endl;
+                    std::cout << "Request Approved!" << std::endl;
+                } else if (action == 2){
+                    rentRequest[choice]->setRqstStt("Denied");
+                    std::cout << rentRequest[choice-1]->getRequestInfo()[7] << std::endl;
+                    std::cout << "Request Denied!" << std::endl;
+                }
+            }
+        }
+    } else if (choice_1 == 3){
+        return 0;
     }
     return 0;
 }
@@ -308,7 +363,7 @@ int Member::addCredits(){
     } while (credit_ip <= 0);
 
     std::cout << std::string(44, '-') << std::endl;
-    char ans;
+    char ans = returnYesNo();
     do {
         std::cout << "Credit add: " << credit_ip << " credits" <<  std::endl;
         std::cout << "Confirmation (Y/N): ";
@@ -349,36 +404,28 @@ int Member::loadRequest(){
 
     if (isFileEmpty(MEMBER_REQUEST_FILE)){
         file.close();
+        std::cout << "File is empty!" << std::endl;
         return 0;
     } else {
         // Read file
         std::string line;
         std::vector<std::string> request_info;
         while (std::getline(file, line)){
-            // if (line.empty()){
-            //     continue;
-            // }
-
             request_info.clear();   
             request_info = splitString(line, '|');
             // load request base on owner ID
-            if (request_info[2] == this->memberID) {    
-                // if (rqst->parseFromLine(line)) {
-                //     rentRequest.push_back(rqst);
-                // } else {
-                //     delete rqst;
-                // }
-                
+            if (request_info[2] == this->getMemberID()) { 
                 Request *new_request = new Request(request_info[0], request_info[1], 
-                                                request_info[2], request_info[3], 
-                                                request_info[4], request_info[5], 
-                                                std::stoi(request_info[6]), request_info[7]);
+                                                   request_info[2], request_info[3], 
+                                                   request_info[4], request_info[5], 
+                                                   std::stoi(request_info[6]), request_info[7]);
                 this->rentRequest.push_back(new_request);
+                std::cout << "Requested added" << std::endl;
             }
         }
         file.close();
+        
     }
-    
     return 0;
 }
 int Member::loadMemberReview(){
@@ -419,26 +466,82 @@ int Member::loadMemberReview(){
 }
 
 int Member::saveRequest(){
+    // read every request from file into vector
+    std::vector <Request*> rqst_file;
+    std::ifstream file_in;
+    file_in.open(MEMBER_REQUEST_FILE, std::ios::in);
+    
+    if (!file_in.is_open()){
+        std::cerr << "1. Error opening file " << MEMBER_REQUEST_FILE << std::endl;
+        return 1;
+    }
+    std::string line;
+    std::vector<std::string> request_info;
+    while(std::getline(file_in, line)){
+        request_info.clear();
+        request_info = splitString(line, '|');
+        Request *rqst = new Request(request_info[0], request_info[1], 
+                                    request_info[2], request_info[3], 
+                                    request_info[4], request_info[5], 
+                                    std::stoi(request_info[6]), request_info[7]);
+        rqst_file.push_back(rqst);
+    }
+    file_in.close();
+
+    // int ct1 = 1, ct2 = 1;
+
+    std::vector <Request*> rqst_vec_op;
+    rqst_vec_op.clear();
+    bool flag = false;
+    for (auto rqst_fl : rqst_file) {       // all from file
+        for (auto rqst : this->rentRequest){ // from current memeber vector
+            if (*rqst == *rqst_fl) {
+                flag = true;
+                if (rqst->getRqstStt() == "Denied" || rqst->getRqstStt() == "Approved"){
+                    rqst_vec_op.push_back(rqst);
+                    break;
+                } 
+                if (rqst->getRqstStt() == "Pending" && rqst_fl->getRqstStt() == "Pending"){
+                    rqst_vec_op.push_back(rqst);
+                    break;
+                }
+                
+            } else {
+                flag = false;
+            } 
+        }
+        if (flag == true){
+            continue;
+        } else {
+            rqst_vec_op.push_back(rqst_fl);
+        }
+    }
+    for (int i = 0; i< rqst_vec_op.size(); i++){
+            
+    }
+// save data to file
     std::ofstream file;
-    file.open(MEMBER_REQUEST_FILE, std::ios::app);
+    file.open(MEMBER_REQUEST_FILE, std::ios::out);
     if (!file.is_open()){
         std::cerr << "2. Error opening file " << MEMBER_REQUEST_FILE << std::endl;
         return 1;
     }
-    std::vector<std::string> request_info;
-    for (Request *request: this->rentRequest) {
-        request_info.clear();
-        request_info = request->getRequestInfo();
-        int data_size = request_info.size();
-        for (int i = 0; i < data_size; i++){
-            file << request_info[i];
-            if (i != data_size - 1){
-                file << "|";
+    
+    request_info.clear();
+    for (Request *request : rqst_vec_op) {    // from file
+            request_info.clear();
+            request_info = request->getRequestInfo();
+            int data_size = request_info.size();
+            for (int i = 0; i < data_size; i++){
+                file << request_info[i];
+                if (i != data_size - 1){
+                    file << "|";
+                }
             }
-        }
-        file << std::endl;
+            file << std::endl;                
     }
     file.close();
+    
     std::cout << "Requests saved successfully!" << std::endl;
     return 0;
 }
@@ -469,8 +572,10 @@ int Member::saveMemberReview(){
 float Member::calcMemberRating(){
     float total_rating = 0;
     int count = 0;
+    std::vector<std::string> rev_data;
     for (auto review : this->memberReview){
-        std::vector<std::string> rev_data = review->getMemberReviewInfo();
+        rev_data.clear();
+        rev_data = review->getMemberReviewInfo();
         if (rev_data[2] == this->getMemberID() && rev_data[3] == "Complete"){
             total_rating += std::stof(rev_data[4]);
             count++;

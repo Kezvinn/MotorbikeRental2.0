@@ -1,5 +1,5 @@
-B345|Future|Red|125|manual|2022|new bike|HCMC|4|||6.000000|1|1
-B223|Air Blade|Green|120|auto|2023|just bought|HN|7|||8.000000|0|1
-B999|SH|Blue|200|auto|2023|nice bike|HCMC|6|||6.000000|1|1
-B095|Exciter|Red|150|manual|2024|perfect bike|HN|9|||8.000000|1|1
-B454|Clasico|Green|100|auto|2019|nice bike|HCMC|6|||6.000000|1|1
+B345|Future|Red|125|manual|2022|new bike|HCMC|4|||5.000000|1|1|
+B223|Air Blade|Green|120|auto|2023|just bought|HN|7|||8.000000|0|1|
+B999|SH|Blue|200|auto|2023|nice bike|HCMC|6|||7.000000|1|1|
+B095|Exciter|Red|150|manual|2024|perfect bike|HN|9|||8.000000|1|1|
+B454|Clasico|Green|100|auto|2019|nice bike|HCMC|6|||6.000000|1|1|

@@ -32,6 +32,10 @@ class Request {
         std::vector<std::string> getRequestInfo();
         int showRequestInfo();
         bool parseFromLine(const std::string& line);
+
+        std::string getRqstStt();
+        int setRqstStt(std::string rqstStt);
+        bool operator== (const Request &rqst) const;
 };
 
 

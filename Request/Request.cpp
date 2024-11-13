@@ -37,6 +37,7 @@ std::vector<std::string> Request::getRequestInfo(){
     return data;
 }
 int Request::showRequestInfo(){
+    std::cout << std::string (30, '-') << std::endl;
     std::cout << std::left;
     std::cout << std::setw(18) << "Request ID: " << this->requestID << std::endl;
     std::cout << std::setw(18) << "Renter ID: " << this->renterID << std::endl;
@@ -46,6 +47,7 @@ int Request::showRequestInfo(){
     std::cout << std::setw(18) << "End Date: " << this->end_date << std::endl;
     std::cout << std::setw(18) << "Total Rent Cost: " << this->total_rent_cost << " credits" << std::endl;
     std::cout << std::setw(18) << "Request Status: " << this->requestStatus << std::endl;
+    std::cout << std::string (30, '-') << std::endl;
     return 0;
 }
 
@@ -71,4 +73,24 @@ bool Request::parseFromLine(const std::string &line){
         return false;
     }
 
+}
+std::string Request::getRqstStt(){
+    return this->requestStatus;
+}
+int Request::setRqstStt(std::string rqstStt){
+    this->requestStatus = rqstStt;
+    return 0;
+}
+
+bool Request::operator==(const Request &rqst) const{
+    if (this->renterID == rqst.renterID
+        && (this->renterID == rqst.renterID
+        && this->ownerID == rqst.ownerID
+        && this->motorbikeID == rqst.motorbikeID
+        && this->start_date == rqst.start_date
+        && this->end_date == rqst.end_date
+        && this->total_rent_cost == rqst.total_rent_cost)){
+        return true;
+        }
+    return false;
 }

@@ -69,6 +69,7 @@ class Member: public User{
         ~Member();      
         // Member Login
         bool memberLogin(std::string &username_ip, std::string &pwd_ip);
+        int init();
         
         // Getter
         Motorbike* getOwnedBike() const;                // Get owned bike ptr
@@ -83,7 +84,8 @@ class Member: public User{
         int setRentedBike(Motorbike *rentedbike_ip);      // Set rented bike ptr
         int setOwnbikeID(std::string bikeID);             // Set owned bike ID
         int setRentBikeID(std::string bikeID);            // Set rented bike ID
-
+        int setMemberRating(float rating);                // Set member rating
+        
         // Function to add request and review into private vector
         int addRentRequest(Request *newRequest);         // Add new rent request
         int addMemberReview(MemberReview *newReview);    // Add new member review

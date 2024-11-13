@@ -37,52 +37,14 @@ int System::init(){
             bike->setBikeStartDate("");
             bike->setBikeEndDate("");
             bike->setBikeAvailability(true);
+            // Update member rating
+            mem->setMemberRating(mem->calcMemberRating());
         }
         // clear info in member
         mem->setRentBikeID("");
         mem->setRentedBike(nullptr);
     }
-    
-    // for (auto bike : motorbike_list) {
-    //     if (rentDuration(bike->getMotorbikeInfo()[10], TODAY_DATE) < 0){ // out of date for rent
-    //         std::cout << "Got here 2" << std::endl;
 
-    //         for (auto owner : member_list) { 
-    //             // check for owner
-    //             std::cout << "Got here 3" << std::endl;
-
-    //             if (owner->getOwnbikeID() == bike->getMotorbikeID()){
-    //                 // create and add new reivew for member
-    //                 MemberReview *mem_review = new MemberReview(owner->getMemberID(),       // reviewer
-    //                                                             bike->getRenterID(),        // reviewee
-    //                                                             "Pending");                 // status
-    //                 std::cout << "Got here 4 " << std::endl;
-    //                 // add member review
-    //                 owner->addMemberReview(mem_review);   // add review for member
-    //             }
-    //         }
-    //         for (auto renter : member_list){
-    //             // check for renter
-    //             if (renter->getMemberID() == bike->getRenterID()){
-    //                 // Create a new review for bike
-    //                 MotorbikeReview *bike_review = new MotorbikeReview(renter->getMemberID(),
-    //                                                                    bike->getMotorbikeID(),
-    //                                                                    "Pending");
-    //                 // add review for bike
-    //                 bike->addBikeReview(bike_review);
-    //                 // clear renter ID and pointer
-    //                 renter->setRentBikeID("");  // clear rent bike ID
-    //                 renter->setRentedBike(nullptr); // clear rented bike
-    //             }
-    //         }
-            
-    //         // Reset value for bike
-    //         bike->setBikeStartDate(""); // clear start date
-    //         bike->setBikeEndDate("");   // clear end date
-    //         bike->setBikeAvailability(true);    // set bike available
-    //         bike->setRenterID("");      // clear renter ID
-    //     }
-    // }
     return 0;
 }
 
@@ -100,26 +62,26 @@ int System::mainMenu(){
     std::cout << "5. Exit" << std::endl;
 
     int choice = choiceInRange(1, 5);
-    // while (1){
-        switch (choice){
-            case 1:
-                memberLogin() ? memberMenu() : mainMenu();
-                break;
-            case 2:
-                adminLogin();
-                break;
-            case 3:
-                signup();
-                break;
-            case 4:
-                viewAllMotorbike();
-                break;
-            case 5:
-                logout();
-                std::cout << "Thank you and goodbye!" << std::endl;
-                break;  
-        }
-    // }
+    
+    switch (choice){
+        case 1:
+            memberLogin() ? memberMenu() : mainMenu();
+            break;
+        case 2:
+            adminLogin();
+            break;
+        case 3:
+            signup();
+            break;
+        case 4:
+            viewAllMotorbike();
+            break;
+        case 5:
+            logout();
+            std::cout << "Thank you and goodbye!" << std::endl;
+            break;  
+    }
+    
     return 0;
 }
 
@@ -328,8 +290,9 @@ int System::memberLogin(){
     
     for (auto mem : member_list){
         if (mem->memberLogin(username_ip, passwork_ip) == true){
-            std::cout << "Login Successfully" << std::endl;
+            // std::cout << "Login Successfully" << std::endl;
             current_member = mem;
+            mem->init();
             break;
         }
     }
@@ -470,15 +433,22 @@ int System::memberMenu(){
     std::cout << "8. Logout" << std::endl;
     
     int choice = choiceInRange(1, 8);
-
+    char c;
     switch (choice){
         case 1:
             current_member->showMemberInfo();
-            memberMenu();
+            c = returnYes();
+            if (c == 'Y' || c == 'y'){
+                memberMenu();
+            }
+            // memberMenu();
             break;
         case 2:
             current_member->getOwnedBike()->showMotorbikeInfo();
-            memberMenu();
+            c = returnYes();
+            if (c == 'Y' || c == 'y'){
+                memberMenu();
+            }
             break;
         case 3:
             current_member->rentRequestMenu();
@@ -491,7 +461,7 @@ int System::memberMenu(){
             current_member->rateRenterMenu();
             break;
         case 6:
-            rentMotorbikeMenu();
+            rentMotorbikeMenu();          
             break;
         case 7:
             current_member->addCredits();
@@ -514,21 +484,22 @@ int System::rentMotorbikeMenu(){
     int loc = choiceInRange(1, 2);
     std::string location = (loc == 1) ? "HN" : "HCMC";
 
-    std::cout << std::string(130, '-') << std::endl;
+    std::cout << std::string(180, '-') << std::endl;
+    std::cout << std::left;
     std::cout << "No. "   
               << std::setw(10) << "BikeID"
               << std::setw(18) << "Model"
               << std::setw(10) << "Color"
-              << std::setw(15) << "Engine Sizes"
+              << std::setw(20) << "Engine Sizes (cc)"
               << std::setw(22) << "Transmission Mode"
               << std::setw(15) << "Year Made"
               << std::setw(15) << "Location"
-              << std::setw(15) << "Rent Cost"
-              << std::setw(15) << "Min Member Rating"
+              << std::setw(20) << "Rent Cost (CR)"
+              << std::setw(15) << "Member Rating"
               << std::setw(15) << "Availability"
               << std::setw(15) << "Description" 
               << std::endl;
-    std::cout << std::string(130, '-') << std::endl;
+    std::cout << std::string(180, '-') << std::endl;
     
     int count = 1;
     std::vector<std::string> bike_data;
@@ -538,18 +509,20 @@ int System::rentMotorbikeMenu(){
         if(bike_data[7] == location             // check for location
             && std::stoi(bike_data[12]) == 1    // check for listed bike
             && std::stoi(bike_data[13]) == 1    // check for available bike
-            && std::stof(bike_data[11]) <= std::stof(current_member->getMemberInfo()[12])){ // check for min rating
-            std::cout << " " << count << "   ";
-            std::cout << std::setw(9) << bike_data[0]    // bikeID
+            && std::stof(bike_data[11]) <= std::stof(current_member->getMemberInfo()[12]) // check for min rating
+            && bike_data[0] != current_member->getOwnbikeID()){ // check for own bike ID
+            std::cout << std::left;
+            std::cout << count << ".  ";
+            std::cout << std::setw(10) << bike_data[0]   // bikeID
                       << std::setw(18) << bike_data[1]   // model
-                      << std::setw(14) << bike_data[2]   // color
-                      << std::setw(16) << bike_data[3]   // engine size
-                      << std::setw(19) << bike_data[4]   // transmission mode
+                      << std::setw(15) << bike_data[2]   // color
+                      << std::setw(18) << bike_data[3]   // engine size
+                      << std::setw(20) << bike_data[4]   // transmission mode
                       << std::setw(15) << bike_data[5]   // year made
                       << std::setw(17) << bike_data[7]   // location
-                      << std::setw(11) << bike_data[8]   // rent cost
+                      << std::setw(18) << bike_data[8]   // rent cost
                       << std::setw(15) << std::fixed << std::setprecision(2) << std::stof(bike_data[11])   // min rating
-                      << std::setw(10) << (std::stoi(bike_data[12])? "Available":"Unavailable")    // availability
+                      << std::setw(15) << (std::stoi(bike_data[12])? "Available":"Unavailable")    // availability
                       << std::setw(15) << bike_data[6]   // description
                       << std::endl;
             count++;
@@ -558,10 +531,9 @@ int System::rentMotorbikeMenu(){
         //     std::cout << "No bike available for rent" << std::endl;
         // }
     }
-    std::cout << std::string(130, '-') << std::endl;
+    std::cout << std::string(180, '-') << std::endl;
 
-    
-    std::cout << "Choose a bike to rent: ";
+    std::cout << "Choose a bike to rent: " << std::endl;
     std::cout << "0. Return" << std::endl;
     std::cout << "1 - " << count-1 << ". Choose a bike" << std::endl;
     
@@ -571,13 +543,12 @@ int System::rentMotorbikeMenu(){
         memberMenu();
     } else {
         current_motorbike = motorbike_list[bike_choice-1];  // set current motorbike
-
         std::string requestID = randomIDs("request");
-        std::string renterID = current_member->getMemberInfo()[0];
+        // std::string renterID = current_member->getMemberID();
         std::string ownerID;
         for(auto owner : member_list){
             if (owner->getMemberInfo()[10] == current_motorbike->getMotorbikeID()){
-                ownerID = owner->getMemberInfo()[0];
+                ownerID = owner->getMemberID();
                 break;
             }
         }
@@ -597,13 +568,18 @@ int System::rentMotorbikeMenu(){
 
         int totalRentCost = (rentDuration(start_date, end_date)) 
                             * (std::stoi(current_motorbike->getMotorbikeInfo()[8]));
-        
+        std::cout << "Total Rent Cost " << totalRentCost << std::endl; 
         // create new request
-        Request *newRequest = new Request(requestID, renterID, 
+        Request *newRequest = new Request(requestID, current_member->getMemberID(), 
                                           ownerID, bikeID, 
                                           start_date, end_date, 
                                           totalRentCost, "Pending");
         current_member->addRentRequest(newRequest);   
+    }
+    std::cout << "Renting request sent!" << std::endl;
+    char c = returnYes();
+    if (c == 'Y' || c == 'y'){
+        memberMenu();
     }
     return 0;
 }
@@ -628,6 +604,8 @@ int System::loadMember(){
         Member *member = new Member();
         if (member->parseFromLine(line)) {
             member_list.push_back(member);
+            member->loadMemberReview();
+            member->loadRequest();
         } else {
             delete member;
         }
@@ -664,6 +642,7 @@ int System::loadMotorbike(){
         Motorbike *motorbike = new Motorbike();
         if (motorbike->parseFromLine(line)) {
             motorbike_list.push_back(motorbike);
+            motorbike->loadMotorbikeReview();
         } else {
             delete motorbike;
         }
@@ -696,10 +675,19 @@ int System::saveMember(){
     for (auto mem : member_list){
         data.clear();
         data = mem->getMemberInfo();
-        file << data[0] << '|' << data[1] << '|' << data[2] << '|' << data[3] << '|' 
-             << data[4] << '|' << data[5] << '|' << data[6] << '|' << data[7] << '|' 
-             << data[8] << '|' << data[9] << '|' << data[10] << '|' << data[11] << '|' 
-             << data[12] << std::endl;
+        int data_size = data.size();
+        for (int i = 0; i < data_size; i++){
+            file << data[i];
+            if (i < data_size - 1){
+                file << '|';
+            } else {
+                file << std::endl;
+            }
+        }
+        // file << data[0] << '|' << data[1] << '|' << data[2] << '|' << data[3] << '|' 
+        //      << data[4] << '|' << data[5] << '|' << data[6] << '|' << data[7] << '|' 
+        //      << data[8] << '|' << data[9] << '|' << data[10] << '|' << data[11] << '|' 
+        //      << data[12] << std::endl;
     }
     std::cout << "Saving Member completed" << std::endl;
     return 0;
@@ -715,10 +703,19 @@ int System::saveMotorbike(){
     for(auto bike : motorbike_list){
         data.clear();
         data = bike->getMotorbikeInfo();
-        file << data[0] << '|' << data[1] << '|' << data[2] << '|' << data[3] << '|' 
-             << data[4] << '|' << data[5] << '|' << data[6] << '|' << data[7] << '|' 
-             << data[8] << '|' << data[9] << '|' << data[10] << '|' << data[11] << '|' 
-             << data[12] << '|' << data[13] << std::endl;
+        int data_size = data.size();
+        for (int i = 0;i < data_size; i++){
+            file << data[i];
+            if (i < data_size - 1){
+                file << '|';
+            } else {
+                file << std::endl;
+            }
+        }
+        // file << data[0] << '|' << data[1] << '|' << data[2] << '|' << data[3] << '|' 
+        //      << data[4] << '|' << data[5] << '|' << data[6] << '|' << data[7] << '|' 
+        //      << data[8] << '|' << data[9] << '|' << data[10] << '|' << data[11] << '|' 
+        //      << data[12] << '|' << data[13] << std::endl;
     }
     std::cout << "Saving Motorbike completed" << std::endl;
     return 0;

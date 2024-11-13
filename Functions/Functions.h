@@ -2,7 +2,6 @@
 #define FUNCTIONS_H
 
 #include <bits/stdc++.h>
-
 // generate random ID for member and motorbike
 std::string randomIDs (std::string type);
 
@@ -22,7 +21,7 @@ std::string todayDate();        // return the string of today date (DD/MM/YYYY)
 int choiceInRange(int min, int max);
 
 char returnYesNo();
-
+char returnYes();
 tm parseDate(const std::string & dateStr);
 int rentDuration(const std::string &startDate, const std::string &endDate);
 
@@ -32,4 +31,7 @@ std::vector<std::string> splitString (std::string &str, char delimiter);
 
 // file check for empty
 bool isFileEmpty(const std::string &filename);
+
+// std::vector<Request*> readFile(const std::string &filename);
+
 #endif
