@@ -36,7 +36,7 @@ std::vector<std::string> MemberReview::getMemberReviewInfo(){
 }
 bool MemberReview::parseFromLine(const std::string &line){
     std::istringstream iss(line);
-    std::string token;
+    // std::string token;
     std::string rating_ip, comment_ip;
     try {
         std::getline(iss, memReviewID, '|');         // memReviewID
@@ -45,13 +45,40 @@ bool MemberReview::parseFromLine(const std::string &line){
         std::getline(iss, memberReviewStatus, '|');  // memberReviewStatus
         
         std::getline(iss, rating_ip, '|');           // rating
-        this->setRating(std::stof(token));
+        if (rating_ip == ""){
+            this->setRating(0);
+        } else {
+            this->setRating(std::stof(rating_ip));
+        }
         
-        std::getline(iss, token, '|');               // comment
-        this->setComment(token);
+        std::getline(iss, comment_ip, '|');          // comment
+        if (comment_ip == "\n"){
+            this->setComment("No comment");
+        } else {
+            this->setComment(comment_ip);
+        }
+
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << std::endl;
         return false;
     }
     return true;
+}
+std::string MemberReview::getMemRevStt(){
+    return this->memberReviewStatus;
+}
+
+int MemberReview::setMemRevStt(std::string stt){
+    this->memberReviewStatus = stt;
+    return 0;
+}
+
+
+bool MemberReview::operator== (const MemberReview &review)const{
+    if (this->memReviewID == review.memReviewID
+        && this->reviewerID == review.reviewerID
+        && this->revieweeID == review.revieweeID){
+        return true;
+    }
+    return false;
 }

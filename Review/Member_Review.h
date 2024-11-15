@@ -26,6 +26,10 @@ class MemberReview : public Review {
 
         std::vector<std::string> getMemberReviewInfo();
         bool parseFromLine(const std::string &line);
+        std::string getMemRevStt();
+        int setMemRevStt(std::string stt);
+
+        bool operator== (const MemberReview &review) const;
 };
 
 #endif

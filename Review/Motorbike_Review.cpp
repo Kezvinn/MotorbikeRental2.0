@@ -45,7 +45,7 @@ bool MotorbikeReview::parseFromLine(const std::string &line){
         std::getline(iss, rentedMotorbikeID, '|');         // rentedMotorbikeID
         std::getline(iss, motorbikeReviewStatus, '|');     // motorbikeReviewStatus
         
-        std::getline(iss, rating_ip, '|');                     // rating
+        std::getline(iss, rating_ip, '|');                 // rating
         this->setRating(std::stof(rating_ip));
         
         std::getline(iss, token, '|');                     // comment

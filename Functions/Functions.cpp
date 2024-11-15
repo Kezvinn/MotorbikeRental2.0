@@ -77,7 +77,7 @@ bool isDateValid(const std::string &input) {
 }
 // Function to check if the input is a letter
 bool isLetter(std::string &input){
-    std::regex validRegex("^[A-Za-z]+$");
+    std::regex validRegex("^[A-Za-z\\s-]+$");
      if (std::regex_match(input, validRegex)){
         return true;
     }
@@ -167,7 +167,7 @@ char returnYes(){ // only accept Y
             std::cin.ignore();
         }
     } while (tolower(c) != 'y');
-    
+    c = tolower(c);
     return c;
 }
 

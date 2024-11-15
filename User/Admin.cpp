@@ -55,7 +55,7 @@ int Admin::viewMember(System &sys){
         count++;
     }   
     std::cout <<std::string(205, '-') << std::endl;
-    char c = returnYesNo();
+    char c = returnYes();
     if (c == 'Y' || c == 'y'){ 
         sys.adminMenu();  
     } 
@@ -83,11 +83,11 @@ int Admin::viewMotorbike(System &sys){
               << std::setw(16) << "Renter ID"
               << std::setw(15) << "Description" 
               << std::endl;
-    std::cout << std::string(210, '-') << std::endl;
+    std::cout << std::string(230, '-') << std::endl;
     for (auto bike: motorbike_list){
         std::vector<std::string> data = bike->getMotorbikeInfo();
         std::cout << std::left;
-        std::cout << " " << count << ".    "
+        std::cout << count << ".    "
                   << std::setw(9) << data[0]    // bikeID
                   << std::setw(18) << data[1]    // model
                   << std::setw(14) << data[2]    // color
@@ -106,9 +106,9 @@ int Admin::viewMotorbike(System &sys){
                   << std::endl;
         count++;
     }   
-    std::cout << std::string(210, '-') << std::endl;
+    std::cout << std::string(230, '-') << std::endl;
 
-    char c = returnYesNo();
+    char c = returnYes();
     if (c == 'Y' || c == 'y'){ 
         sys.adminMenu();
     }

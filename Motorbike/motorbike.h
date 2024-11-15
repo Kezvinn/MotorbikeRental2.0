@@ -24,11 +24,11 @@ class Motorbike {
         std::string end_date;           // 10
         float min_mem_rating;           // 11
     // motorbike status 
-        bool is_listed;                 // 12
+        bool is_listed;                 // 12   User decide to list or unlist the bike
         bool is_available;              // 13   // check for bike currently rented or not 
     // Renter(Member)ID
         std::string renterID;           // 14
-    // Bike Review
+    // Motorbike Review
         std::vector<MotorbikeReview*> motorbikeReview;
     public:
         // Default constructor
@@ -85,7 +85,11 @@ class Motorbike {
         int setBikeStartDate(std::string date);
         int setBikeEndDate(std::string date);
         int setBikeAvailability(bool status);
+        int setListed(bool status);
         int setRenterID(std::string renterID);
+        int setRentCost(int cost);
+        int setMinRating(float rating);
+        int setBikeLocation(std::string location);
         
         // add review into vector
         int addBikeReview(MotorbikeReview *review);  // add bike review
@@ -100,6 +104,8 @@ class Motorbike {
         float calcMotorbikeRating();  
         // Error handling
         bool parseFromLine(const std::string& line);
+
+        int editBikeInfo();
 };
 
 

@@ -82,15 +82,15 @@ int Request::setRqstStt(std::string rqstStt){
     return 0;
 }
 
-bool Request::operator==(const Request &rqst) const{
+bool Request::operator== (const Request &rqst) const {
     if (this->renterID == rqst.renterID
         && (this->renterID == rqst.renterID
         && this->ownerID == rqst.ownerID
         && this->motorbikeID == rqst.motorbikeID
         && this->start_date == rqst.start_date
         && this->end_date == rqst.end_date
-        && this->total_rent_cost == rqst.total_rent_cost)){
+        && this->total_rent_cost == rqst.total_rent_cost)) {
         return true;
-        }
+    }
     return false;
 }

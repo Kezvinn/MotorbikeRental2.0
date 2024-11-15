@@ -144,7 +144,12 @@ int Motorbike::setNewMotorbikeInfo(std::vector<std::string> data){
 int Motorbike::setBikeStartDate(std::string date){ this->start_date = date; return 0; }
 int Motorbike::setBikeEndDate(std::string date){ this->end_date = date; return 0; }
 int Motorbike::setBikeAvailability(bool status){ this->is_available = status; return 0; }
+int Motorbike::setListed(bool status) { this->is_listed = status; return 0; };
+
 int Motorbike::setRenterID(std::string renterID){ this->renterID = renterID; return 0; }
+int Motorbike::setRentCost(int cost){this->rent_cost = cost; return 0; }
+int Motorbike::setMinRating(float rating){ this->min_mem_rating = rating; return 0; }
+int Motorbike::setBikeLocation(std::string location){ this->location = location; return 0; }
 
 int Motorbike::addBikeReview(MotorbikeReview *review){ this->motorbikeReview.push_back(review); return 0; }
 
@@ -160,27 +165,35 @@ int Motorbike::loadMotorbikeReview(){
         return 0;
     } else {
         std::string line;
-        std::vector<std::string> review_info;
+        // std::vector<std::string> review_info;
         while (std::getline(file, line)){
-            // if (line.empty()){
-            //     continue;
-            // }
-            review_info.clear();
-            review_info = splitString(line, '|');
-            if (review_info[2] == this->motorbikeID){
-                MotorbikeReview *new_review = new MotorbikeReview(review_info[0], review_info[1], 
-                                                                review_info[2], review_info[3],
-                                                                std::stof(review_info[4]), review_info[5]);
-                this->motorbikeReview.push_back(new_review);
+            if (line.empty()){
+                continue;
             }
+            MotorbikeReview *new_review = new MotorbikeReview;
+            if (new_review->parseFromLine(line)){
+                motorbikeReview.push_back(new_review);
+            } else {
+                delete new_review;
+            }
+
+            // review_info.clear();
+            // review_info = splitString(line, '|');
+            // if (review_info[2] == this->motorbikeID){
+            //     MotorbikeReview *new_review = new MotorbikeReview(review_info[0], review_info[1], 
+            //                                                     review_info[2], review_info[3],
+            //                                                     std::stof(review_info[4]), review_info[5]);
+            //     this->motorbikeReview.push_back(new_review);
+            // }
         }
+        std::cout << "Loading bike review completed!" << std::endl;
         file.close();
     }
     return 0;
 }
 int Motorbike::saveMotorbikeReview(){
     std::ofstream file;
-    file.open(MOTORBIKE_REVIEW_FILE);
+    file.open(MOTORBIKE_REVIEW_FILE, std::ios::app);
     if (!file.is_open()){
         std::cerr << "2. Error opening file" << MOTORBIKE_REVIEW_FILE << std::endl;
         return 1;
@@ -196,7 +209,6 @@ int Motorbike::saveMotorbikeReview(){
             if (i != data_size - 1){
                 file << "|";
             }
-            std::cout << "got here" << std::endl;
         }
         file << std::endl;
     }
@@ -230,37 +242,37 @@ bool Motorbike::parseFromLine(const std::string& line) {
     std::istringstream iss(line);
     std::string token;
     try {
-        std::getline(iss, motorbikeID, '|');         // bikeID
-        std::getline(iss, model, '|');          // model
-        std::getline(iss, color, '|');          // color    
+        std::getline(iss, motorbikeID, '|');        // bikeID
+        std::getline(iss, model, '|');              // model
+        std::getline(iss, color, '|');              // color    
 
-        std::getline(iss, token, '|');          //engine_capacity
+        std::getline(iss, token, '|');              // engine_capacity
         engine_size = std::stoi(token);
         
-        std::getline(iss, transmission_mode, '|');   // transmission
+        std::getline(iss, transmission_mode, '|');  // transmission
         
-        std::getline(iss, token, '|');          // year
+        std::getline(iss, token, '|');              // year
         year_made = std::stoi(token);
         
-        std::getline(iss, desctiption, '|');    // description
-        std::getline(iss, location, '|');       // location
+        std::getline(iss, desctiption, '|');        // description
+        std::getline(iss, location, '|');           // location
         
-        std::getline(iss, token, '|');          // rent_cost
+        std::getline(iss, token, '|');              // rent_cost
         rent_cost = std::stoi(token);
         
-        std::getline(iss, start_date, '|');    // description
-        std::getline(iss, end_date, '|');       // location
+        std::getline(iss, start_date, '|');         // description
+        std::getline(iss, end_date, '|');           // location
         
-        std::getline(iss, token, '|');          // rating
+        std::getline(iss, token, '|');              // rating
         min_mem_rating = std::stoi(token);
         
-        std::getline(iss, token, '|');          // list
+        std::getline(iss, token, '|');              // list
         is_listed = std::stoi(token);
         
-        std::getline(iss, token, '|');          // available
+        std::getline(iss, token, '|');              // available
         is_available = std::stoi(token);
         
-        std::getline(iss, renterID, '|');       // renterID
+        std::getline(iss, renterID, '|');           // renterID
         
     } catch (const std::exception& e) {
         std::cerr << "Error parsing line: " << line << "\nException: " << e.what() << std::endl;
@@ -268,4 +280,12 @@ bool Motorbike::parseFromLine(const std::string& line) {
     }
 
     return true;
+}
+
+int Motorbike::editBikeInfo(){
+    std::cout << "1. Location" << std::endl;
+    std::cout << "2. Rent Cost" << std::endl;
+    std::cout << "3. Minimum Member Rating" << std::endl;
+    
+    std::cout << "" << std::endl;
 }

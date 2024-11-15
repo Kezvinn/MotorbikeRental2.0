@@ -68,6 +68,9 @@ class System {
         int saveMotorbike();
     // logout
         int logout();
+    // remove bike
+        int removeBike(std::string bikeID);
+        int editBikeMenu();
 };
 #endif
 

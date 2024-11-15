@@ -8,17 +8,17 @@
 using namespace std;
 
 int main(){
-    // System system;
-    // system.init();
-    // system.mainMenu();
-    vector<int> vec = {10,20,20,20,30,30,20,20,10};
-    sort(vec.begin(), vec.end());
-    int it = unique(vec.begin(), vec.end());
+    System system;
+    system.init();
+    system.mainMenu();
+    // vector<int> vec = {10,20,20,20,30,30,20,20,10};
+    // sort(vec.begin(), vec.end());
+    // auto it = unique(vec.begin(), vec.end());
 
-    vec.resize(distance(vec.begin(), it));
+    // vec.resize(distance(vec.begin(), it));
     
-    for (it = vec.begin(); it!=vec.end(); ++it)
-        cout << ' ' << *it;
+    // for (it = vec.begin(); it!=vec.end(); ++it)
+    //     cout << ' ' << *it;
 
     // Request rqst_1("RQ859", "M123", "M133", "B223", "12/12/2024", "20/12/2024", 56, "Pending");
     // Request rqst_2("RQ859", "M123", "M133", "B223", "12/12/2024", "20/12/2024", 56, "Pending");

@@ -26,7 +26,7 @@ class Member: public User{
     // Motorbike ID -- owned and rented
         std::string ownedbikeID;                            // 10
         std::string rentingbikeID;                          // 11
-    // pointer to bike own and rent
+    // Pointer to bike own and rent
         Motorbike *ownedbike;   
         Motorbike *rentedbike;
     // Rating

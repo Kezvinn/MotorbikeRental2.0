@@ -53,6 +53,7 @@ bool Member::memberLogin(std::string &username_ip, std::string &pwd_ip){
 int Member::init(){
     loadRequest();
     loadMemberReview();
+    // this->getOwnedBike()->loadMotorbikeReview();
     return 0;
 }
 // Getter 
@@ -233,25 +234,38 @@ int Member::rateMotorbikeMenu(){
     std::cout << "+==========================================+" << std::endl;
     std::cout << "|            Rate Motorbike Menu           |" << std::endl;
     std::cout << "+==========================================+" << std::endl;
-    
+    std::cout << "1. Review Rented Motorbike." << std::endl;
+    std::cout << "2. View Past Review." << std::endl;
+    std::cout << "3. Return." << std::endl;
     int count = 1;
     // get bike view into vector based on the bike iD of the object
-    std::vector<MotorbikeReview*> review = this->rentedbike->getMotorbikeReview();
+    std::cout << std::string(100, '-') << std::endl;
+    std::cout << std::left;
+    std::cout << std::setw(10) << "No."       
+                << std::setw(15) << "Review ID"
+                << std::setw(15) << "Renter ID "
+                << std::setw(15) << "Motorbike ID"    
+                << std::setw(15) << "Rating"       
+                << std::setw(15) << "Comment"    
+                << std::setw(15) << "Status" 
+                << std::endl;
+    
+    std::vector<MotorbikeReview*> review = this->getRentedBike()->getMotorbikeReview();
     std::vector<std::string> rev_data;
     for (auto rev : review){
         rev_data.clear();
         rev_data = rev->getMotorbikeReviewInfo();
-        std::cout << "--------------------------------------------" << std::endl;
-        std::cout << "No.       Review ID       Renter ID       Motorbike ID    Rating       Comment     Status" << std::endl;
-        std::cout << count << "     " 
-                  << rev_data[0] << "    "
-                  << rev_data[1] << "    " 
-                  << rev_data[2] << "    "
-                  << rev_data[3] << "    " 
-                  << rev_data[4] << "    "
-                  << rev_data[5] << std::endl; 
+        std::cout << std::left;
+        std::cout << std::setw(10) << count  
+                  << std::setw(15)<< rev_data[0]
+                  << std::setw(15)<< rev_data[1] 
+                  << std::setw(15)<< rev_data[2]
+                  << std::setw(15)<< rev_data[3] 
+                  << std::setw(15)<< rev_data[4]
+                  << std::setw(15)<< rev_data[5] << std::endl; 
         count++;
     }
+    std::cout << std::string(100, '-') << std::endl;
     // member can choose which review to rate
     std::cout << "0. Return" << std::endl;
     std::cout << "1 - " << count-1 << ". Motorbike to Review" << std::endl;
@@ -291,55 +305,135 @@ int Member::rateRenterMenu(){
     std::cout << "+==========================================+" << std::endl;
     std::cout << "|              Rate Renter Menu            |" << std::endl;
     std::cout << "+==========================================+" << std::endl;
-    
+    std::cout << "1. View Past Review" << std::endl;
+    std::cout << "2. View Pending Review" << std::endl;
+    std::cout << "3. View Received Review" << std::endl;
+    std::cout << "4. Return" << std::endl;
+    int choice_1 = choiceInRange(1, 4);
     int count = 1;
-    // get bike view into vector based on the bike iD of the object
-    std::vector<MemberReview*> review = this->memberReview;
-    std::vector<std::string> rev_data;
-    for (auto rev : review){
-        rev_data.clear();
-        rev_data = rev->getMemberReviewInfo();
-        std::cout << "--------------------------------------------" << std::endl;
-        std::cout << "No.       Review ID       Reviewee ID       Rating       Comment     Status" << std::endl;
-        std::cout << count << "     " 
-                  << rev_data[0] << "    "
-                  << rev_data[1] << "    " 
-                  << rev_data[2] << "    "
-                  << rev_data[3] << "    " 
-                  << rev_data[4] << "    "
-                  << rev_data[5] << std::endl; 
-        count++;
-    }
-    // member can choose which review to rate
-    std::cout << "0. Return" << std::endl;
-    std::cout << "1 - " << count-1 << ". Renter to Review" << std::endl;
-    int choice = choiceInRange(0, count-1);
     
-    float rating;
-    std::string comment;
-
-    if (choice == 0){
-        return 0;
-    } else {
-        do {
-            std::cout << "Enter Rating (1-10): ";
-            std::cin >> rating;
-            if (std::cin.fail()){
-                std::cin.clear();
-                std::cin.ignore();
+    std::vector<std::string> rev_data;
+    std::cout << std::left;
+    if (choice_1 == 1){
+        count = 1;
+        std::cout << std::setw(10) << "No."       
+              << std::setw(15) << "Review ID"
+              << std::setw(15) << "Reviewer ID"              
+              << std::setw(15) << "Reviewee ID"       
+              << std::setw(15) << "Status" 
+              << std::setw(15) << "Rating" 
+              << std::setw(15) << "Comment"     
+              << std::endl;
+        std::cout << std::string(100,'-') << std::endl;
+        for (auto rev : this->memberReview){
+            rev_data.clear();
+            rev_data = rev->getMemberReviewInfo();
+            if (rev->getMemRevStt() == "Complete"){
+                std::cout << std::left;
+                std::cout << count << "." << std::string(8, ' ') 
+                        << std::setw(15) << rev_data[0]
+                        << std::setw(15) << rev_data[1] 
+                        << std::setw(15) << rev_data[2]
+                        << std::setw(15) << rev_data[3] 
+                        << std::setw(15) << std::fixed << std::setprecision(2) << std::stof(rev_data[4])
+                        << std::setw(15) << rev_data[5] << std::endl; 
+                count++;
             }
-        } while (rating < 1 || rating > 10);
+        }
+        std::cout << "Return?" << std::endl;
+        char c = returnYes();
+        if (c == 'Y' || c == 'y'){
+            rateRenterMenu();
+        }
+    } else if (choice_1 == 2){
+        count = 1;
+        std::cout << std::setw(10) << "No."       
+              << std::setw(15) << "Review ID"
+              << std::setw(15) << "Reviewer ID"              
+              << std::setw(15) << "Reviewee ID"       
+              << std::setw(15) << "Status" 
+              << std::setw(15) << "Rating" 
+              << std::setw(15) << "Comment"     
+              << std::endl;
+        std::cout << std::string(100,'-') << std::endl;
+        for (auto rev : this->memberReview){
+            rev_data.clear();
+            rev_data = rev->getMemberReviewInfo();
+            if (rev->getMemRevStt() == "Pending"){
+                std::cout << std::left;
+                std::cout << count << "." << std::string(8, ' ') 
+                        << std::setw(15) << rev_data[0]
+                        << std::setw(15) << rev_data[1] 
+                        << std::setw(15) << rev_data[2]
+                        << std::setw(15) << rev_data[3] 
+                        << std::setw(15) << std::fixed << std::setprecision(2) << std::stof(rev_data[4])
+                        << std::setw(15) << rev_data[5] << std::endl; 
+                count++;
+            }
+        }
+         // member can choose which review to rate
+        std::cout << "0. Return" << std::endl;
+        std::cout << "1 - " << count-1 << ". Renter to Review" << std::endl;
+        int choice = choiceInRange(0, count-1);
         
-        std::cin.ignore();
-        std::cout << "Enter Comment: ";
-        std::cin >> comment;
-        
-        // update the review
-        std::string reviewID = randomIDs("review");
-        MemberReview *memberReview = new MemberReview(reviewID, this->memberID,
-                                                      this->rentingbikeID, "Complete", 
-                                                      rating, comment);
-        this->memberReview.push_back(memberReview);
+        float rating;
+        std::string comment;
+
+        if (choice == 0){
+            return 0;
+        } else {
+            do {
+                std::cout << "Enter Rating (1-10): ";
+                std::cin >> rating;
+                if (std::cin.fail()){
+                    std::cin.clear();
+                    std::cin.ignore();
+                }
+            } while (rating < 1 || rating > 10);
+            
+            std::cin.ignore();
+            
+            std::cout << "Enter Comment: ";
+            std::getline(std::cin, comment);
+            
+            // update review
+            this->memberReview[choice-1]->setRating(rating);
+            this->memberReview[choice-1]->setComment(comment);
+            this->memberReview[choice-1]->setMemRevStt("Complete");
+        }
+    } else if (choice_1 == 3){
+        count = 1;
+        std::cout << std::setw(10) << "No."       
+              << std::setw(15) << "Review ID"
+              << std::setw(15) << "Reviewer ID"              
+              << std::setw(15) << "Reviewee ID"       
+              << std::setw(15) << "Status" 
+              << std::setw(15) << "Rating" 
+              << std::setw(15) << "Comment"     
+              << std::endl;
+        std::cout << std::string(100,'-') << std::endl;
+        for (auto rev : this->memberReview){
+            rev_data.clear();
+            rev_data = rev->getMemberReviewInfo();
+            if (rev_data[2] == this->memberID){
+                std::cout << std::left;
+                std::cout << count << "." << std::string(8, ' ') 
+                        << std::setw(15) << rev_data[0]
+                        << std::setw(15) << rev_data[1] 
+                        << std::setw(15) << rev_data[2]
+                        << std::setw(15) << rev_data[3] 
+                        << std::setw(15) << std::fixed << std::setprecision(2) << std::stof(rev_data[4])
+                        << std::setw(15) << rev_data[5] << std::endl; 
+                count++;
+            }
+        }
+        std::cout << "Return?" << std::endl;
+        char c = returnYes();
+        if (c == 'Y' || c == 'y'){
+            rateRenterMenu();
+        }
+    } else if (choice_1 == 4){
+        return 0;
     }
     return 0;
 }
@@ -442,22 +536,23 @@ int Member::loadMemberReview(){
         std::string line;
         std::vector<std::string> review_info;
         while (std::getline(file, line)){
-            // if (line.empty()){
-            //     continue;
-            // }
+            if (line.empty()){
+                continue;
+            }
             review_info.clear();
             review_info = splitString(line, '|');
             MemberReview *review = new MemberReview();
+            // load both reviewee and reviewer into memberReview vector
             if (review_info[1] == this->memberID || review_info[2] == this->memberID){
-                // if (review->parseFromLine(line)){
-                //     memberReview.push_back(review);
-                // } else {
-                //     delete review;
-                // }
-                MemberReview *new_review = new MemberReview(review_info[0], review_info[1], 
-                                                            review_info[2], review_info[3],
-                                                            std::stof(review_info[4]), review_info[5]);
-                this->memberReview.push_back(new_review);
+                if (review->parseFromLine(line)){
+                    memberReview.push_back(review);
+                } else {
+                    delete review;
+                }
+                // MemberReview *new_review = new MemberReview(review_info[0], review_info[1], 
+                //                                             review_info[2], review_info[3],
+                //                                             std::stof(review_info[4]), review_info[5]);
+                // this->memberReview.push_back(new_review);
             }
         }
         file.close();
@@ -465,8 +560,8 @@ int Member::loadMemberReview(){
     return 0;
 }
 
-int Member::saveRequest(){
-    // read every request from file into vector
+int Member::saveRequest() {
+// read every request from file into vector
     std::vector <Request*> rqst_file;
     std::ifstream file_in;
     file_in.open(MEMBER_REQUEST_FILE, std::ios::in);
@@ -488,8 +583,7 @@ int Member::saveRequest(){
     }
     file_in.close();
 
-    // int ct1 = 1, ct2 = 1;
-
+// compare data
     std::vector <Request*> rqst_vec_op;
     rqst_vec_op.clear();
     bool flag = false;
@@ -515,9 +609,6 @@ int Member::saveRequest(){
         } else {
             rqst_vec_op.push_back(rqst_fl);
         }
-    }
-    for (int i = 0; i< rqst_vec_op.size(); i++){
-            
     }
 // save data to file
     std::ofstream file;
@@ -546,14 +637,65 @@ int Member::saveRequest(){
     return 0;
 }
 int Member::saveMemberReview(){
+// load the current review into object to compare
+    std::vector <MemberReview*> review_file;
+    std::ifstream file_in;
+    file_in.open(MEMBER_REVIEW_FILE, std::ios::in);
+    if (!file_in.is_open()){
+        std::cerr << "1. Error opening file " << MEMBER_REQUEST_FILE << std::endl;
+        return 1;
+    }
+    std::string line;
+    std::vector<std::string> review_info;
+    while(std::getline(file_in, line)){
+        review_info.clear();
+        review_info = splitString(line, '|');
+        MemberReview *review = new MemberReview();
+        if (review->parseFromLine(line)){
+            review_file.push_back(review);
+        } else {
+            delete review;
+        }
+    }
+    file_in.close();
+// compare the 2 and between the one in vector and in file
+    std::vector <MemberReview*> review_vec_op;
+    review_vec_op.clear();
+    bool flag = false;
+    for (auto review_fl : review_file) {       // all from file
+        for (auto review : this->memberReview){ // from current memeber vector
+            if (*review == *review_fl) {
+                flag = true;
+                if (review->getMemRevStt() == "Complete"){
+                    review_vec_op.push_back(review);
+                    break;
+                } 
+                // if (review->getMemRevStt() == "Pending" && review_fl->getMemRevStt() == "Pending"){
+                //     review_vec_op.push_back(review);
+                //     break;
+                // }
+                
+            } else {
+                flag = false;
+            } 
+        }
+        if (flag == true){
+            continue;
+        } else {
+            review_vec_op.push_back(review_fl);
+        }
+    }
+// save to a new vector -> save to file
+
     std::ofstream file;
-    file.open(MEMBER_REVIEW_FILE, std::ios::app);
+    file.open(MEMBER_REVIEW_FILE, std::ios::out);
     if (!file.is_open()){
         std::cerr << "2. Error opening file " << MEMBER_REVIEW_FILE << std::endl;
         return 1;
     }
-    std::vector<std::string> review_info;
-    for (MemberReview *review: this->memberReview){
+    review_info.clear();
+
+    for (MemberReview *review : review_vec_op ){
         review_info.clear();
         review_info = review->getMemberReviewInfo();
         int data_size = review_info.size();
@@ -570,6 +712,9 @@ int Member::saveMemberReview(){
     return 0;
 }
 float Member::calcMemberRating(){
+    if (this->memberReview.empty()){
+        return 0;
+    }
     float total_rating = 0;
     int count = 0;
     std::vector<std::string> rev_data;
@@ -581,6 +726,7 @@ float Member::calcMemberRating(){
             count++;
         }
     }
+    // this->memberRating = total_rating/count;
     return total_rating/count;
 }
 
