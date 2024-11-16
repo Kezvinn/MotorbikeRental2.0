@@ -539,7 +539,7 @@ int System::rentMotorbikeMenu(){
     
     int count = 1;
     std::vector<std::string> bike_data;
-    for(auto bike4rent : motorbike_list){
+    for (auto bike4rent : motorbike_list){
         bike_data.clear();
         bike_data = bike4rent->getMotorbikeInfo();
         if(bike_data[7] == location             // check for location
@@ -806,7 +806,9 @@ int System::logout(){
     saveMember();
     saveMotorbike();
     saveHistory();
-    current_member->logout();
+    if (current_member != nullptr){
+        current_member->logout();
+    }
     // current_member->getOwnedBike()->logout();
     // current_member->getRentedBike()->logout();
     // if (current_motorbike != nullptr){

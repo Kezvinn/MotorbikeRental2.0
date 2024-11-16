@@ -1,3 +1,0 @@
-BR101|M133| |Pending|7.4|good bike
-BR188|M133|B223|Pending|2.3|no comment
-BR121|M133|B223|Pending|6.7|perfect

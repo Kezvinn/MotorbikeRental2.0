@@ -88,7 +88,10 @@ int Member::setRentedBike(Motorbike *bike){ this->rentedbike = bike; return 0; }
 int Member::setOwnbikeID(std::string bikeID){ this->ownedbikeID = bikeID; return 0; }            
 int Member::setRentBikeID(std::string bikeID){ this->rentingbikeID = bikeID; return 0; }
 int Member::setMemberRating(float rating){ this->memberRating = rating; return 0; }
-int Member::addRentRequest(Request *newRequest){ this->rentRequest.push_back(newRequest); return 0; }
+int Member::addRentRequest(Request *newRequest){ 
+    this->rentRequest.push_back(newRequest); 
+    std::cout << "New request added successfully!" << std::endl;
+    return 0; }
 int Member::addMemberReview(MemberReview *newReview){ this->memberReview.push_back(newReview); return 0; }
 
 void Member::showMemberInfo(){
@@ -747,21 +750,20 @@ bool Member::parseFromLine(const std::string& line){
         std::getline(iss, phonenumber, '|');      // phone number
         
         std::getline(iss, token, '|');            // id type
-        id_type = std::stoi(token);
+        this->id_type = std::stoi(token);
 
         std::getline(iss, id_number, '|');        // ID number
         std::getline(iss, drv_license, '|');      // drv_license
         std::getline(iss, exp_date, '|');         // exp date
 
         std::getline(iss, token, '|');            // credit
-        credit = std::stoi(token);
+        this->credit = std::stoi(token);
 
         std::getline(iss, ownedbikeID, '|');      // ownedbikeID
         std::getline(iss, rentingbikeID, '|');    // rentingbikeID
         
         std::getline(iss, token, '|');            // mem rating
-        memberRating = std::stof(token);
-
+        this->memberRating = std::stof(token);
 
     } catch (const std::exception& e) {
         std::cerr << "Error parsing line: " << line << "\nException: " << e.what() << std::endl;
