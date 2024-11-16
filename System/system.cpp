@@ -1,4 +1,5 @@
 #include "System.h"
+
 // Constructor
 System::System(){
     admin = new Admin();
@@ -11,9 +12,11 @@ System::~System(){
     delete current_member;
     delete current_motorbike;
 }
+// Init function
 int System::init(){
     loadMember();       // load member
     loadMotorbike();    // load bike
+    loadHistory();      // load history
     // std::cout << "Loading Member and Motorbike completed" << std::endl;
     
     for (auto mem : member_list) {
@@ -21,10 +24,17 @@ int System::init(){
             if (mem->getRentBikeID() == bike->getMotorbikeID() 
                 && rentDuration(bike->getEnddate(), TODAY_DATE) < 0) {
                 // create review for bike
-                MotorbikeReview *bike_rev = new MotorbikeReview(mem->getMemberID(),
-                                                                bike->getMotorbikeID(),
-                                                                "Pending");
-                bike->addBikeReview(bike_rev);
+                // MotorbikeReview *bike_rev = new MotorbikeReview(mem->getMemberID(),
+                //                                                 bike->getMotorbikeID(),
+                //                                                 "Pending");
+                // bike->addBikeReview(bike_rev);
+                
+                History *new_history = new History(mem->getMemberID(),
+                                                   bike->getMotorbikeID(),
+                                                   bike->getStartdate(),
+                                                   bike->getEnddate());
+                std::cout << "new history created" << std::endl;
+                history_list.push_back(new_history);
             }
             if (mem->getOwnbikeID() == bike->getMotorbikeID()) {
                 // create review for member
@@ -53,9 +63,9 @@ int System::init(){
 
     return 0;
 }
-
-std::vector<Member*> &System::getMemberList(){ return member_list; }
-std::vector<Motorbike*> &System::getMotorbikeList(){ return motorbike_list; }
+// Getter
+std::vector<Member*> &System::getMemberList(){ return member_list;}
+std::vector<Motorbike*> &System::getMotorbikeList(){ return motorbike_list;}
 // --------------------------- Main Menu -----------------------------------------------------------//
 int System::mainMenu(){
     std::cout << "+==============================================+" << std::endl;
@@ -94,7 +104,6 @@ int System::mainMenu(){
     
     return 0;
 }
-
 // --------------------------- Admin Menu ---------------------------------------------------------//
 int System::adminLogin(){
     std::string admin_username, admin_pwd;
@@ -137,7 +146,7 @@ int System::adminMenu(){
     }
     return 0;
 }
-// ---------------------------Non-Member Functions------------------------------------------------//
+// --------------------------- Non-Member Functions ------------------------------------------------//
 int System::viewAllMotorbike(){
     std::cout << "+==============================================+" << std::endl;
     std::cout << "|              View All Motorbike              |" << std::endl;
@@ -192,6 +201,7 @@ int System::viewAllMotorbike(){
     }
     return 0;
 }
+// Member Sign up
 int System::signup(){
     std::string memberID, username, password, fullname, phonenumber;
     int id_type;   // 0 = Citizen ID, 1 = Passport
@@ -282,8 +292,7 @@ int System::signup(){
     mainMenu();
     return 0;
 }
-
-//---------------------------Member Functions-----------------------------------------------------//
+//---------------------------- Member Menu ------------------------------------------------------//
 int System::memberLogin(){
     std::cout << "+==============================================+" << std::endl;
     std::cout << "|                  Member Login                |" << std::endl;
@@ -431,7 +440,6 @@ Motorbike* System::bikeSignup(){
     std::cout << "Add new bike successfully!" << std::endl;
     return newbike;
 }
-//---------------------------- Member Menu ------------------------------------------------------//
 int System::memberMenu(){
     std::cout << "+==============================================+" << std::endl;
     std::cout << "|                  Member Menu                 |" << std::endl;
@@ -472,7 +480,7 @@ int System::memberMenu(){
             memberMenu();
             break;
         case 4:
-            current_member->rateMotorbikeMenu();
+            rateMotorbikeMenu();
             break;
         case 5:
             current_member->rateRenterMenu();
@@ -611,8 +619,7 @@ int System::rentMotorbikeMenu(){
     }
     return 0;
 }
-
-// ---------------------------File Handling Functions---------------------------------------------//
+// --------------------------- File Handling Functions---------------------------------------------//
 // Load data from txt files
 int System::loadMember(){
     member_list.clear();
@@ -689,6 +696,29 @@ int System::loadMotorbike(){
     std::cout << "Loading Motorbike completed" << std::endl;
     return 0;
 }
+int System::loadHistory(){
+    std::ifstream file;
+    file.open(HISTORY_FILE, std::fstream::in);
+    if (!file.is_open()){
+        std::cerr << "Error: Could not open file" << std::endl;
+        return 1;
+    }
+    std::string line;
+    while (std::getline(file, line)){
+        if (line.empty()){
+            continue;
+        }
+        std::vector<std::string> data;
+        data = splitString(line, '|');
+        History *history = new History(data[0], 
+                                       data[1], data[2], 
+                                       data[3], data[4]);
+        history_list.push_back(history);
+    }
+    file.close();
+    std::cout << "Loading History completed" << std::endl;
+    return 0;
+}
 // Save data to txt files
 int System::saveMember(){
     std::ofstream file;
@@ -747,10 +777,35 @@ int System::saveMotorbike(){
     std::cout << "Saving Motorbike completed" << std::endl;
     return 0;
 }
+int System::saveHistory(){
+    std::ofstream file;
+    file.open(HISTORY_FILE, std::fstream::out);
+    if (!file.is_open()){
+        std::cerr << "Error: Could not open file" << std::endl;
+        return 1;
+    }
+    std::vector<std::string> data;
+    for (auto his : history_list){
+        data.clear();
+        data = his->getHistoryInfo();
+        int data_size = data.size();
+        for(int i = 0; i < data_size; i++){
+            file << data[i];
+            if (i < data_size - 1){
+                file << '|';
+            } else {
+                file << std::endl;
+            }
+        }
+    }
+    std::cout << "Saving History completed" << std::endl;
+    return 0;
+}
 
 int System::logout(){
     saveMember();
     saveMotorbike();
+    saveHistory();
     current_member->logout();
     // current_member->getOwnedBike()->logout();
     // current_member->getRentedBike()->logout();
@@ -771,15 +826,7 @@ int System::logout(){
     // }
     return 0;
 }
-int System::removeBike(std::string bikeID) {
-    for (auto bike:motorbike_list){
-        if (bike->getMotorbikeID() == bikeID){
-            motorbike_list.erase(std::remove(motorbike_list.begin(), motorbike_list.end(), bike), motorbike_list.end());
-            delete bike;
-            break;
-        }
-    }
-}
+
 int System:: editBikeMenu(){
     std::cout << "+==============================================+" << std::endl;
     std::cout << "|              Edit Motorbike Menu             |" << std::endl;
@@ -826,6 +873,76 @@ int System:: editBikeMenu(){
                 current_member->getOwnedBike()->setListed(0);
             }
             break;
+    }
+    return 0;
+}
+
+int System::rateMotorbikeMenu(){
+    std::cout << "+==============================================+" << std::endl;
+    std::cout << "|         Review Rented Motorbike Menu         |" << std::endl;
+    std::cout << "+==============================================+" << std::endl;
+    std::cout << "1. Review Motorbike." << std::endl;
+    std::cout << "2. Return." << std::endl;
+    int choice = choiceInRange(1, 2);
+    int count = 1;
+    if (choice == 1){
+        std::cout << std::string(100, '-') << std::endl;
+        std::cout << std::left;
+        std::cout << std::setw(10) << "No."       
+                    << std::setw(15) << "Renter ID"
+                    << std::setw(15) << "Motorbike ID"    
+                    << std::setw(15) << "Start Date"       
+                    << std::setw(15) << "End Date"
+                    << std::endl;
+        std::cout << std::string(100, '-') << std::endl;
+        std::vector<std::string> data;
+        for(auto his:history_list){
+            data.clear();
+            data = his->getHistoryInfo();
+            if (data[2] == current_member->getMemberID()){
+                std::cout << std::left;
+                std::cout << std::setw(10) << count        
+                          << std::setw(15) << data[1]
+                          << std::setw(15) << data[2]    
+                          << std::setw(15) << data[3]
+                          << std::setw(15) << data[4]       
+                          << std::endl;
+            }
+        }
+        std::cout << std::string(100, '-') << std::endl;
+        std::cout << "0. Return" << std::endl;
+        std::cout << "1 - " << count-1 << ". Choose motorbike to review." << std::endl;
+        int choice_1 = choiceInRange(1, count-1);
+        float rating;
+        std::string comment;
+        if (choice_1 == 0){
+            memberMenu();
+        } else {
+            do {
+                std::cout << "Enter Rating (1-10): ";
+                std::cin >> rating;
+                if (std::cin.fail()){
+                    std::cin.clear();
+                    std::cin.ignore();
+                }
+            } while (rating < 1 || rating > 10);
+        
+            std::cin.ignore();
+            std::cout << "Enter Comment: ";
+            std::getline(std::cin, comment);
+            
+            for (auto bike: motorbike_list){
+                if (bike->getMotorbikeID() == history_list[choice_1-1]->getBikeID()){
+                    MotorbikeReview *new_rev = new MotorbikeReview(history_list[choice_1-1]->getMemID(),
+                                                                   history_list[choice_1-1]->getBikeID(),
+                                                                   "Complete", rating, comment);
+                    bike->addBikeReview(new_rev);
+                    break;
+                }
+            }
+        }
+    } else if (choice == 2){
+        memberMenu();
     }
     return 0;
 }

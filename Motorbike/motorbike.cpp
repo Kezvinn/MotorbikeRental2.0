@@ -165,26 +165,26 @@ int Motorbike::loadMotorbikeReview(){
         return 0;
     } else {
         std::string line;
-        // std::vector<std::string> review_info;
+        std::vector<std::string> review_info;
         while (std::getline(file, line)){
             if (line.empty()){
                 continue;
             }
-            MotorbikeReview *new_review = new MotorbikeReview;
-            if (new_review->parseFromLine(line)){
-                motorbikeReview.push_back(new_review);
-            } else {
-                delete new_review;
-            }
-
-            // review_info.clear();
-            // review_info = splitString(line, '|');
-            // if (review_info[2] == this->motorbikeID){
-            //     MotorbikeReview *new_review = new MotorbikeReview(review_info[0], review_info[1], 
-            //                                                     review_info[2], review_info[3],
-            //                                                     std::stof(review_info[4]), review_info[5]);
-            //     this->motorbikeReview.push_back(new_review);
+            // MotorbikeReview *new_review = new MotorbikeReview;
+            // if (new_review->parseFromLine(line)){
+            //     motorbikeReview.push_back(new_review);
+            // } else {
+            //     delete new_review;
             // }
+
+            review_info.clear();
+            review_info = splitString(line, '|');
+            if (review_info[2] == this->motorbikeID){
+                MotorbikeReview *new_review = new MotorbikeReview(review_info[0], review_info[1], 
+                                                                  review_info[2], review_info[3],
+                                                                  std::stof(review_info[4]), review_info[5]);
+                this->motorbikeReview.push_back(new_review);
+            }
         }
         std::cout << "Loading bike review completed!" << std::endl;
         file.close();

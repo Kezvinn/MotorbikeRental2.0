@@ -34,7 +34,8 @@ class Member: public User{
     
     // Request and Reivew
         std::vector<Request*> rentRequest;
-        std::vector<MemberReview*> memberReview; 
+        std::vector<MemberReview*> memberReview;
+        // std::vector<std::string> rentedBikeID_list;
     public:
         // Default constructor
         Member(); 

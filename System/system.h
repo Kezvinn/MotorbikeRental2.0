@@ -11,14 +11,16 @@
 #include "../Review/Member_review.h"
 #include "../Review/Motorbike_review.h"
 
+#include "../History/History.h"
 #include "../Motorbike/motorbike.h"
 
 #include "../Request/request.h"
 
-#define TODAY_DATE "07/11/2024"
+#define TODAY_DATE "17/11/2024"
 
 #define MEMBER_FILE "Data/Member.txt"
 #define MOTORBIKE_FILE "Data/Motorbike.txt"
+#define HISTORY_FILE "Data/History.txt"
 
 class Admin;
 
@@ -29,6 +31,7 @@ class System {
         // Members and Motorbike vector pointer
         std::vector<Member*> member_list;
         std::vector<Motorbike*> motorbike_list;
+        std::vector<History*> history_list;
         // Pointer to current member and motorbike
         Member *current_member;
         Motorbike *current_motorbike; 
@@ -63,14 +66,17 @@ class System {
         // Load data from txt files
         int loadMember();
         int loadMotorbike();
+        int loadHistory();
         // Save data to txt files 
         int saveMember();
         int saveMotorbike();
+        int saveHistory();
     // logout
         int logout();
     // remove bike
-        int removeBike(std::string bikeID);
         int editBikeMenu();
+        int rateMotorbikeMenu();
+
 };
 #endif
 

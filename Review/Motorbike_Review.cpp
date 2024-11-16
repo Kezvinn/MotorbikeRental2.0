@@ -4,10 +4,12 @@ MotorbikeReview::MotorbikeReview(){};
 // Parameterized constructor - use for creating new review
 MotorbikeReview::MotorbikeReview(std::string renterID_ip, 
                                  std::string rentedMotorbikeID_ip, 
-                                 std::string motorbikeReviewStatus_ip):
+                                 std::string motorbikeReviewStatus_ip,
+                                 float rating_ip, std::string comment_ip):
                                  renterID(renterID_ip), 
                                  rentedMotorbikeID(rentedMotorbikeID_ip), 
-                                 motorbikeReviewStatus(motorbikeReviewStatus_ip){
+                                 motorbikeReviewStatus(motorbikeReviewStatus_ip),
+                                 Review(rating_ip, comment_ip){
                             this->motorbikeReviewID = randomIDs("motorbikeReview");
                     } 
 // Parameterized constructor - use for loading review from file 

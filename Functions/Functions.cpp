@@ -3,21 +3,17 @@
 std::string randomIDs (std::string type){ 
     srand(time(0));
     std::string id;
-    if (type == "member"){
-        id = "M" + std::to_string(rand() % 1000);
-    }
-    else if (type == "motorbike"){
-        id = "B" + std::to_string(rand() % 1000);
-    }
-    else if (type == "request"){
-        id = "RQ" + std::to_string(rand() % 1000);
-    }
-    else if (type == "memReview"){
-        id = "MR" + std::to_string(rand() % 1000);
-    }
-    else if (type == "bikeReview"){
-        id = "BR" + std::to_string(rand() % 1000);
-    }
+    std::ostringstream oss;
+    
+    int randomNum = rand() % 1000;
+    oss <<std::setw(3) << std::setfill('0') << randomNum;
+    
+    if (type == "member"){ id = "M" + oss.str(); }
+    else if (type == "motorbike"){ id = "B" + oss.str(); }
+    else if (type == "request"){ id = "RQ" + oss.str(); }
+    else if (type == "memReview"){ id = "MR" + oss.str(); }
+    else if (type == "bikeReview"){ id = "BR" + oss.str();
+    } else if (type == "history"){ id = "H" + oss.str(); }
     return id;
 }
 // Fucntion to check if the input is only number

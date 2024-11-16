@@ -250,21 +250,22 @@ int Member::rateMotorbikeMenu(){
                 << std::setw(15) << "Status" 
                 << std::endl;
     
-    std::vector<MotorbikeReview*> review = this->getRentedBike()->getMotorbikeReview();
-    std::vector<std::string> rev_data;
-    for (auto rev : review){
-        rev_data.clear();
-        rev_data = rev->getMotorbikeReviewInfo();
-        std::cout << std::left;
-        std::cout << std::setw(10) << count  
-                  << std::setw(15)<< rev_data[0]
-                  << std::setw(15)<< rev_data[1] 
-                  << std::setw(15)<< rev_data[2]
-                  << std::setw(15)<< rev_data[3] 
-                  << std::setw(15)<< rev_data[4]
-                  << std::setw(15)<< rev_data[5] << std::endl; 
-        count++;
-    }
+    
+    // std::vector<MotorbikeReview*> review = this->getRentedBike()->getMotorbikeReview();
+    // std::vector<std::string> rev_data;
+    // for (auto rev : review){
+    //     rev_data.clear();
+    //     rev_data = rev->getMotorbikeReviewInfo();
+    //     std::cout << std::left;
+    //     std::cout << std::setw(10) << count  
+    //               << std::setw(15) << rev_data[0]
+    //               << std::setw(15) << rev_data[1] 
+    //               << std::setw(15) << rev_data[2]
+    //               << std::setw(15) << rev_data[3] 
+    //               << std::setw(15) << rev_data[4]
+    //               << std::setw(15) << rev_data[5] << std::endl; 
+    //     count++;
+    // }
     std::cout << std::string(100, '-') << std::endl;
     // member can choose which review to rate
     std::cout << "0. Return" << std::endl;
@@ -712,18 +713,19 @@ int Member::saveMemberReview(){
     return 0;
 }
 float Member::calcMemberRating(){
-    if (this->memberReview.empty()){
-        return 0;
-    }
     float total_rating = 0;
     int count = 0;
-    std::vector<std::string> rev_data;
-    for (auto review : this->memberReview){
-        rev_data.clear();
-        rev_data = review->getMemberReviewInfo();
-        if (rev_data[2] == this->getMemberID() && rev_data[3] == "Complete"){
-            total_rating += std::stof(rev_data[4]);
-            count++;
+    if (this->memberReview.empty()){
+        return 10;
+    } else {
+        std::vector<std::string> rev_data;
+        for (auto review : this->memberReview){
+            rev_data.clear();
+            rev_data = review->getMemberReviewInfo();
+            if (rev_data[2] == this->getMemberID() && rev_data[3] == "Complete"){
+                total_rating += std::stof(rev_data[4]);
+                count++;
+            }
         }
     }
     // this->memberRating = total_rating/count;
