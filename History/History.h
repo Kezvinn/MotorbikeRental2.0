@@ -15,9 +15,6 @@ class History {
         History(std::string historyID_ip,
                 std::string renterID_ip, std::string motorbikeID_ip, 
                 std::string startDate_ip, std::string endDate_ip);
-        // Use for creating new history
-        History(std::string renterID_ip, std::string motorbikeID_ip, 
-                std::string startDate_ip, std::string endDate_ip);
         // Setter
         int setMemID(std::string memID);
         int setBikeID(std::string bikeID);

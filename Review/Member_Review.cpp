@@ -2,25 +2,25 @@
 
 MemberReview::MemberReview(){}
 // create new review - no rating and comment
-MemberReview::MemberReview(std::string reviewerID_ip,           // 1 
+MemberReview::MemberReview(std::string memReviewID_ip,
+                           std::string reviewerID_ip,           // 1 
                            std::string revieweeID_ip,           // 2
                            std::string memberReviewStatus_ip)   // 3
-                           :reviewerID(reviewerID_ip),
+                           :memReviewID(memReviewID_ip),
+                            reviewerID(reviewerID_ip),
                             revieweeID(revieweeID_ip), 
-                            memberReviewStatus(memberReviewStatus_ip) {
-                        this->memReviewID = randomIDs("memReview");     // 0
-                    }
+                            memberReviewStatus(memberReviewStatus_ip){};
 // load review from file
 MemberReview::MemberReview(std::string memReviewID_ip,                  // 0
                            std::string reviewerID_ip,                   // 1
                            std::string revieweeID_ip,                   // 2
                            std::string memberReviewStatus_ip,           // 3
                            float rating_ip, std::string comment_ip)     // 4 - 5
-                           :memReviewID(memReviewID_ip), 
+                           :Review(rating_ip, comment_ip),
+                           memReviewID(memReviewID_ip), 
                            reviewerID(reviewerID_ip), 
                            revieweeID(revieweeID_ip), 
-                           memberReviewStatus(memberReviewStatus_ip), 
-                           Review(rating_ip, comment_ip) {}
+                           memberReviewStatus(memberReviewStatus_ip){};
 
 std::vector<std::string> MemberReview::getMemberReviewInfo(){
     std::vector<std::string> memberReview_info;

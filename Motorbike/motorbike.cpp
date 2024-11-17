@@ -2,38 +2,7 @@
 
 // default constructor
 Motorbike::Motorbike(){}
-// parameterized constructor - use this for sign up new bike
-Motorbike::Motorbike(std::string model_ip,              // 1
-                     std::string color_ip,              // 2
-                     int engine_size_ip,                // 3
-                     std::string transmission_mode_ip,  // 4
-                     int year_made_ip,                  // 5
-                     std::string desctiption_ip,        // 6
-                     std::string location_ip,           // 7
-                     int rent_cost_ip,                  // 8
-                     std::string startDate_ip,          // 9
-                     std::string endDate_ip,            // 10
-                     float min_mem_rating_ip,           // 11
-                     bool is_listed_ip,                 // 12
-                     bool is_available_ip,              // 13
-                     std::string renterID_ip)           // 14
-                    :model(model_ip), 
-                    color(color_ip), 
-                    engine_size(engine_size_ip), 
-                    transmission_mode(transmission_mode_ip), 
-                    year_made(year_made_ip), 
-                    desctiption(desctiption_ip), 
-                    location(location_ip), 
-                    rent_cost(rent_cost_ip), 
-                    start_date(startDate_ip), 
-                    end_date(endDate_ip), 
-                    min_mem_rating(min_mem_rating_ip), 
-                    is_listed(is_listed_ip), 
-                    is_available(is_available_ip), 
-                    renterID(renterID_ip) {
-                    this->motorbikeID = randomIDs("motorbike");
-                    }
-// parameterized constructor - use this to load motorbike from file
+// parameterized constructor
 Motorbike::Motorbike(std::string motorbikeID_ip,            // 0              
                      std::string model_ip,                  // 1  
                      std::string color_ip,                  // 2    
@@ -224,13 +193,18 @@ int Motorbike::logout(){
 float Motorbike::calcMotorbikeRating(){
     float total_rating = 0;
     int count = 0;
-    std::vector<std::string> rev_data;
-    for(auto review:motorbikeReview){
-        rev_data.clear();
-        rev_data = review->getMotorbikeReviewInfo();
-        if (rev_data[2] == this->getMotorbikeID() && rev_data[3] == "Complete"){
-            total_rating += std::stof(rev_data[4]);
-            count++;
+        
+    if (this->motorbikeReview.empty()){
+        return 10;
+    } else {
+        std::vector<std::string> rev_data;
+        for(auto review:motorbikeReview){
+            rev_data.clear();
+            rev_data = review->getMotorbikeReviewInfo();
+            if (rev_data[2] == this->getMotorbikeID() && rev_data[3] == "Complete"){
+                total_rating += std::stof(rev_data[4]);
+                count++;
+            }
         }
     }
     return total_rating/count;
@@ -280,12 +254,4 @@ bool Motorbike::parseFromLine(const std::string& line) {
     }
 
     return true;
-}
-
-int Motorbike::editBikeInfo(){
-    std::cout << "1. Location" << std::endl;
-    std::cout << "2. Rent Cost" << std::endl;
-    std::cout << "3. Minimum Member Rating" << std::endl;
-    
-    std::cout << "" << std::endl;
 }

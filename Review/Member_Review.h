@@ -14,7 +14,8 @@ class MemberReview : public Review {
     public:
         MemberReview();
         // parameterized constructor use for creating new review
-        MemberReview(std::string reviewerID_ip, 
+        MemberReview(std::string memReviewID_ip,
+                     std::string reviewerID_ip, 
                      std::string revieweeID_ip, 
                      std::string memberReviewStatus_ip);
         //  parameterized constructor - use for loading review from file

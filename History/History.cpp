@@ -7,13 +7,6 @@ History::History(std::string historyID_ip,
                 :historyID(historyID_ip), 
                  renterID(memberID_ip), motorbikeID(motorbikeID_ip),
                  startDate(startDate_ip), endDate(endDate_ip) {}
-History::History(std::string memberID_ip, std::string motorbikeID_ip,
-                    std::string startDate_ip, std::string endDate_ip)
-                    :renterID(memberID_ip), motorbikeID(motorbikeID_ip),
-                    startDate(startDate_ip), endDate(endDate_ip) {
-                        this->historyID = randomIDs("history");
-                    }
-
 // Setter
 int History::setMemID(std::string memID){ this->renterID = memID; return 0; }
 int History::setBikeID(std::string bikeID){ this->motorbikeID = bikeID; return 0; }

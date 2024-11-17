@@ -39,20 +39,7 @@ class Member: public User{
     public:
         // Default constructor
         Member(); 
-        // Parameterized constructor - use this to create new member
-        Member(std::string username_ip,             // 1              
-               std::string password_ip,             // 2
-               std::string fullname_ip,             // 3
-               std::string phonenumber_ip,          // 4 
-               bool id_type_ip,                     // 5
-               std::string id_number_ip,            // 6
-               std::string drv_license_ip,          // 7
-               std::string exp_date_ip,             // 8
-               int credit_ip,                       // 9
-               std::string ownedbikeID_ip,          // 10 
-               std::string rentedbikeID_ip,         // 11
-               float memberRating_ip);              // 12
-        // Parameterized constructor - use this to load member from file    
+        // Parameterized constructor    
         Member(std::string memberID_ip,             // 0
                std::string username_ip,             // 1
                std::string password_ip,             // 2

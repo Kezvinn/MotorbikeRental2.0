@@ -2,27 +2,25 @@
 // Default constructor
 MotorbikeReview::MotorbikeReview(){};
 // Parameterized constructor - use for creating new review
-MotorbikeReview::MotorbikeReview(std::string renterID_ip, 
+MotorbikeReview::MotorbikeReview(std::string motorbikeReviewID_ip,
+                                 std::string renterID_ip, 
                                  std::string rentedMotorbikeID_ip, 
-                                 std::string motorbikeReviewStatus_ip,
-                                 float rating_ip, std::string comment_ip):
+                                 std::string motorbikeReviewStatus_ip):
+                                 motorbikeReviewID(motorbikeReviewID_ip),
                                  renterID(renterID_ip), 
                                  rentedMotorbikeID(rentedMotorbikeID_ip), 
-                                 motorbikeReviewStatus(motorbikeReviewStatus_ip),
-                                 Review(rating_ip, comment_ip){
-                            this->motorbikeReviewID = randomIDs("motorbikeReview");
-                    } 
+                                 motorbikeReviewStatus(motorbikeReviewStatus_ip){};
 // Parameterized constructor - use for loading review from file 
 MotorbikeReview::MotorbikeReview(std::string motorbikeReviewID_ip, 
                                  std::string renterID_ip, 
                                  std::string rentedMotorbikeID_ip, 
                                  std::string motorbikeReviewStatus_ip, 
                                  float rating_ip, std::string comment_ip)
-                                 : motorbikeReviewID(motorbikeReviewID_ip), 
+                                 :Review(rating_ip, comment_ip),
+                                 motorbikeReviewID(motorbikeReviewID_ip), 
                                  renterID(renterID_ip), 
                                  rentedMotorbikeID(rentedMotorbikeID_ip), 
-                                 motorbikeReviewStatus(motorbikeReviewStatus_ip), 
-                                 Review(rating_ip, comment_ip) {}
+                                 motorbikeReviewStatus(motorbikeReviewStatus_ip){};
 
 std::vector<std::string> MotorbikeReview::getMotorbikeReviewInfo(){
     std::vector<std::string> motorbikeReview_info;

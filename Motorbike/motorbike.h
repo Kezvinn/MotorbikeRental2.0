@@ -32,24 +32,7 @@ class Motorbike {
         std::vector<MotorbikeReview*> motorbikeReview;
     public:
         // Default constructor
-        Motorbike();
-        
-        // Parameterized constructor - use this for sign up new bike    
-        Motorbike(std::string model_ip,                     // 1
-                 std::string color_ip,                      // 2
-                 int engine_size_ip,                        // 3
-                 std::string transmission_mode_ip,          // 4
-                 int year_made_ip,                          // 5
-                 std::string desctiption_ip,                // 6
-                 std::string location_ip,                   // 7
-                 int rent_cost_ip,                          // 8
-                 std::string startDate_ip,                  // 9
-                 std::string endDate_ip,                    // 10
-                 float min_mem_rating_ip,                   // 11
-                 bool is_listed_ip,                         // 12
-                 bool is_available_ip,                      // 13
-                 std::string renterID_ip);                  // 14
-    
+        Motorbike();    
         // Parameterized constructor - use this to load motorbike from file
         Motorbike(std::string motorbikeID_ip,               // 0
                  std::string model_ip,                      // 1
@@ -104,8 +87,6 @@ class Motorbike {
         float calcMotorbikeRating();  
         // Error handling
         bool parseFromLine(const std::string& line);
-
-        int editBikeInfo();
 };
 
 

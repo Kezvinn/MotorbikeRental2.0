@@ -14,6 +14,9 @@ System::~System(){
 }
 // Init function
 int System::init(){
+    member_list.clear();
+    motorbike_list.clear();
+    history_list.clear();
     loadMember();       // load member
     loadMotorbike();    // load bike
     loadHistory();      // load history
@@ -29,7 +32,8 @@ int System::init(){
                 //                                                 "Pending");
                 // bike->addBikeReview(bike_rev);
                 
-                History *new_history = new History(mem->getMemberID(),
+                History *new_history = new History(randomIDs("history"),
+                                                   mem->getMemberID(),
                                                    bike->getMotorbikeID(),
                                                    bike->getStartdate(),
                                                    bike->getEnddate());
@@ -38,7 +42,8 @@ int System::init(){
             }
             if (mem->getOwnbikeID() == bike->getMotorbikeID()) {
                 // create review for member
-                MemberReview *mem_rev = new MemberReview(mem->getMemberID(),
+                MemberReview *mem_rev = new MemberReview(randomIDs("memReview"),
+                                                         mem->getMemberID(),
                                                          bike->getRenterID(),
                                                          "Pending");
                 mem->addMemberReview(mem_rev);
@@ -809,22 +814,28 @@ int System::logout(){
     if (current_member != nullptr){
         current_member->logout();
     }
-    // current_member->getOwnedBike()->logout();
-    // current_member->getRentedBike()->logout();
-    // if (current_motorbike != nullptr){
-    //     current_motorbike->logout();
-    // }
-    // current_motorbike->logout();
 
     current_member = nullptr;
     current_motorbike = nullptr;
     admin = nullptr;
+    member_list.clear();
+    std::cout << "Member list size: " << member_list.size() << std::endl;
 
-    // for(auto mem : member_list){
-    //     delete mem;
+    motorbike_list.clear();
+    std::cout << "motorbike list size: " << member_list.size() << std::endl;
+
+    history_list.clear();
+    std::cout << "history list size: " << member_list.size() << std::endl;
+    
+    // for (int i = 0; i < member_list.size(); i++){
+    //     std::cout << "Deleting member: " << member_list[i]->getMemberID() << std::endl;
+    //     delete member_list[i];
+    //     member_list[i] = nullptr;
     // }
-    // for(auto bike : motorbike_list){
-    //     delete bike;
+    // for (int  i = 0; i < motorbike_list.size(); i++){
+    //     std::cout << "Deleting bike: " << motorbike_list[i]->getMotorbikeID() << std::endl;
+    //     delete motorbike_list[i];
+    //     motorbike_list[i] = nullptr;
     // }
     return 0;
 }
@@ -935,7 +946,8 @@ int System::rateMotorbikeMenu(){
             
             for (auto bike: motorbike_list){
                 if (bike->getMotorbikeID() == history_list[choice_1-1]->getBikeID()){
-                    MotorbikeReview *new_rev = new MotorbikeReview(history_list[choice_1-1]->getMemID(),
+                    MotorbikeReview *new_rev = new MotorbikeReview(randomIDs("bikeReview"),
+                                                                   history_list[choice_1-1]->getMemID(),
                                                                    history_list[choice_1-1]->getBikeID(),
                                                                    "Complete", rating, comment);
                     bike->addBikeReview(new_rev);

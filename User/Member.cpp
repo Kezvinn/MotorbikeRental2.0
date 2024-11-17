@@ -1,27 +1,8 @@
 #include "Member.h"
 
 // Default constructor
-Member::Member(){}
-
-// Parameterized constructor - use this to create new member
-Member::Member(std::string username_ip, std::string password_ip,
-               std::string fullname_ip, std::string phonenumber_ip, 
-               bool id_type_ip, std::string id_number_ip, 
-               std::string drv_license_ip, std::string exp_date_ip, 
-               int credit_ip, 
-               std::string ownedbikeID_ip, std::string rentedbikeID_ip,
-               float memberRating_ip)
-               : User(username_ip, password_ip), 
-               fullname(fullname_ip), phonenumber(phonenumber_ip), 
-               id_type(id_type_ip), id_number(id_number_ip),
-               drv_license(drv_license_ip), exp_date(exp_date_ip), 
-               credit(credit_ip), 
-               ownedbikeID(ownedbikeID_ip), rentingbikeID(rentedbikeID_ip),
-               memberRating(memberRating_ip) {
-            this->memberID = randomIDs("member");
-            }
-
-// Parameterized constructor - use this to load member from file
+Member::Member(){};
+// Parameterized constructor
 Member::Member(std::string memberID_ip, std::string username_ip, std::string password_ip, 
                std::string fullname_ip, std::string phonenumber_ip, 
                bool id_type_ip, std::string id_number_ip, 
@@ -29,14 +10,13 @@ Member::Member(std::string memberID_ip, std::string username_ip, std::string pas
                int credit_ip, 
                std::string ownedbikeID_ip, std::string rentedbikeID_ip,
                float memberRating_ip)
-               : memberID(memberID_ip), User(username_ip, password_ip), 
+               :User(username_ip, password_ip), memberID(memberID_ip), 
                fullname(fullname_ip), phonenumber(phonenumber_ip), 
                id_type(id_type_ip), id_number(id_number_ip),
                drv_license(drv_license_ip), exp_date(exp_date_ip), 
                credit(credit_ip), 
                ownedbikeID(ownedbikeID_ip), rentingbikeID(rentedbikeID_ip),
-               memberRating(memberRating_ip) {
-               };
+               memberRating(memberRating_ip){};
 
 // Destructor
 Member::~Member(){
