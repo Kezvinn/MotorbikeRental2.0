@@ -23,6 +23,7 @@ int System::init(){
     // std::cout << "Loading Member and Motorbike completed" << std::endl;
     
     for (auto mem : member_list) {
+        mem->init();
         for (auto bike: motorbike_list) {
             if (mem->getRentBikeID() == bike->getMotorbikeID() 
                 && rentDuration(bike->getEnddate(), TODAY_DATE) < 0) {
@@ -272,28 +273,18 @@ int System::signup(){
     } while (!isDateValid(exp_date));
 
     std::cout << "--------------------------------------------" << std::endl; 
-    char ans;
-    do {
-        std::cout << "Add new bike (Y/N)? ";
-        std::cin >> ans; 
-    }  while (tolower(ans) != 'y' && tolower(ans) != 'n');
-    
-    Motorbike *newbike = new Motorbike();
-    if (ans == 'Y' || ans == 'y'){
-        // add new bike
-        newbike = bikeSignup();
-    } else if (ans == 'N' || ans == 'n'){
-        std::cout << "Sign up successfully!" << std::endl;
-    }
+    std::cout << "+==========================================+" << std::endl;
+    std::cout << "|           Sign up successfully!          |" << std::endl;
+    std::cout << "+==========================================+" << std::endl;
 
-    memberID = randomIDs("member");
     
     // create new member and add to to the list 
-    Member *mem = new Member(memberID, username, password, fullname,
+    Member *mem = new Member(randomIDs("member"), username, password, fullname,
                              phonenumber, id_type, id_number,
                              drv_license, exp_date, credit,
-                             newbike->getMotorbikeID(), "", 10);
+                             "", "", 10);
     member_list.push_back(mem);
+    
     mainMenu();
     return 0;
 }
@@ -752,6 +743,7 @@ int System::saveMember(){
         //      << data[12] << std::endl;
     }
     std::cout << "Saving Member completed" << std::endl;
+    file.close();
     return 0;
 }
 int System::saveMotorbike(){
@@ -780,6 +772,7 @@ int System::saveMotorbike(){
         //      << data[12] << '|' << data[13] << std::endl;
     }
     std::cout << "Saving Motorbike completed" << std::endl;
+    file.close();
     return 0;
 }
 int System::saveHistory(){
@@ -804,6 +797,7 @@ int System::saveHistory(){
         }
     }
     std::cout << "Saving History completed" << std::endl;
+    file.close();
     return 0;
 }
 

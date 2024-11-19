@@ -108,10 +108,13 @@ int Member::rentRequestMenu(){
     int choice_1 = choiceInRange(1, 3);
     
     int count = 1;
-    int count_1 = 1;
-    std::cout << std::string(125, '-') << std::endl;
-    std::cout << std::left;
-    std::cout << std::setw(10) << "No. "   
+    
+    std::vector<std::string> rqst_data;
+// past request 
+    if (choice_1 == 1) {
+        std::cout << std::string(125, '-') << std::endl;
+        std::cout << std::left;
+        std::cout << std::setw(10) << "No. "   
               << std::setw(15) << "Request ID"
               << std::setw(15) << "Renter ID"   
               << std::setw(15) << "Owner ID"     
@@ -120,10 +123,7 @@ int Member::rentRequestMenu(){
               << std::setw(15) << "End Date"  
               << std::setw(15) << "Rent Cost"   
               << std::setw(10) << "Status" <<  std::endl;
-    
-    std::vector<std::string> rqst_data;
-// past request 
-    if (choice_1 == 1) {
+        count = 1;
         for(auto rqst : this->rentRequest) {
             rqst_data.clear();
             rqst_data = rqst->getRequestInfo();
@@ -146,7 +146,9 @@ int Member::rentRequestMenu(){
         }
         std::cout << std::string(125,'-') << std::endl;
         if (count - 1 == 0){
-            std::cout << "No request available!" << std::endl;
+            std::cout << "+====================================+" << std::endl;
+            std::cout << "|        No request available!       |" << std::endl;
+            std::cout << "+====================================+" << std::endl;
             return 0;
         }
         std::cout << "Return to Member Menu? (Y/N): " << std::endl;
@@ -157,6 +159,18 @@ int Member::rentRequestMenu(){
     }
 // current pending request 
     else if (choice_1 == 2) {  // current pending request
+        std::cout << std::string(125, '-') << std::endl;
+        std::cout << std::left;
+        std::cout << std::setw(10) << "No. "   
+                << std::setw(15) << "Request ID"
+                << std::setw(15) << "Renter ID"   
+                << std::setw(15) << "Owner ID"     
+                << std::setw(15) << "Motorbike ID"    
+                << std::setw(15) << "Start Date"
+                << std::setw(15) << "End Date"  
+                << std::setw(15) << "Rent Cost"   
+                << std::setw(10) << "Status" <<  std::endl;
+        count = 1;
         for(auto rqst : this->rentRequest) {
             rqst_data.clear();
             rqst_data = rqst->getRequestInfo();
@@ -164,7 +178,7 @@ int Member::rentRequestMenu(){
                 && rqst_data[3] == this->ownedbikeID
                 && rqst_data[7] == "Pending") {  
                 std::cout << std::left;
-                std::cout << count_1 << "." <<std::string(10,' ');
+                std::cout << count << "." <<std::string(10,' ');
                 std::cout << std::setw(15) << rqst_data[0]  // Request ID
                         << std::setw(15) << rqst_data[1]  // Renter ID
                         << std::setw(16) << rqst_data[2]  // Owner ID
@@ -174,19 +188,21 @@ int Member::rentRequestMenu(){
                         << std::setw(12) << rqst_data[6]  // Rent Cost
                         << std::setw(10) << rqst_data[7]  // Status
                         << std::endl;
-                count_1++;
+                count++;
             }
         }
         std::cout << std::string(125,'-') << std::endl;
-        if (count_1 - 1 == 0){
-            std::cout << "No request available!" << std::endl;
+        if (count - 1 == 0){
+            std::cout << "+====================================+" << std::endl;
+            std::cout << "|        No request available!       |" << std::endl;
+            std::cout << "+====================================+" << std::endl;
             return 0;
         }
         // Member can choose which request to approvel and denied then return back to 
         std::cout << "Choose request to approve/deny: " << std::endl;
         std::cout << "0. Return" << std::endl;
-        std::cout << "1 - " << count_1 - 1 << ". Approve/Deny the request" << std::endl;
-        int choice = choiceInRange(0, count_1-1);
+        std::cout << "1 - " << count - 1 << ". Approve/Deny the request" << std::endl;
+        int choice = choiceInRange(0, count-1);
         if (choice == 0) {
             return 0;
         } else {
@@ -275,8 +291,7 @@ int Member::rateMotorbikeMenu(){
         std::cin >> comment;
         
         // update the review
-        std::string reviewID = randomIDs("review");
-        MotorbikeReview *bikeReview = new MotorbikeReview(reviewID, this->memberID,
+        MotorbikeReview *bikeReview = new MotorbikeReview(randomIDs("review"), this->memberID,
                                                           this->rentingbikeID, "Complete", 
                                                           rating, comment);
         this->rentedbike->getMotorbikeReview().push_back(bikeReview);
@@ -502,7 +517,6 @@ int Member::loadRequest(){
             }
         }
         file.close();
-        
     }
     return 0;
 }
